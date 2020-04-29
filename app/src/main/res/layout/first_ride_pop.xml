@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="2dp"
+    android:outlineAmbientShadowColor="@color/app_color"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/margin_lg"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/margin1"
+        android:paddingLeft="@dimen/margin1"
+        android:paddingRight="@dimen/margin1"
+        android:paddingBottom="@dimen/margin1"
+        >
+
+
+
+        <ImageView
+            android:id="@+id/right_icon"
+            android:layout_width="@dimen/size5"
+            android:layout_height="@dimen/size5"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/circle_shape"
+            android:backgroundTint="@color/app_color"
+            android:padding="@dimen/margin"
+            android:src="@drawable/right_arrow"
+            android:tint="@color/white" />
+
+        <RelativeLayout
+            android:id="@+id/yui"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_toLeftOf="@id/right_icon"
+            android:paddingLeft="@dimen/margin">
+
+            <TextView
+                android:id="@+id/txt1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/font_mid"
+                android:includeFontPadding="false"
+                android:text="@string/select_cat"
+                android:textColor="@color/black"
+                android:textSize="@dimen/txt_size_lg" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/category_rl"
+            android:layout_width="match_parent"
+            android:layout_below="@id/yui"
+            android:layout_marginTop="@dimen/margin_xlg"
+            android:paddingLeft="@dimen/margin1"
+            android:paddingRight="@dimen/margin"
+            android:background="@drawable/round_ract0"
+            android:layout_height="@dimen/size6">
+
+            <TextView
+                android:id="@+id/category_txt"
+                android:singleLine="true"
+                android:background="@null"
+                android:fontFamily="@font/font1"
+                android:textStyle="bold"
+                android:textSize="@dimen/txt_size_md1"
+                android:includeFontPadding="false"
+                android:textColor="@color/black"
+                android:layout_marginLeft="@dimen/sizesm1"
+                android:inputType="phone"
+                android:layout_centerVertical="true"
+                android:hint="@string/choose_cat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/pricv_rl"
+            android:layout_width="match_parent"
+            android:layout_below="@id/category_rl"
+            android:layout_marginTop="@dimen/margin1"
+            android:paddingLeft="@dimen/margin1"
+            android:paddingRight="@dimen/margin"
+            android:background="@drawable/round_ract0"
+            android:layout_height="@dimen/size6">
+
+            <EditText
+                android:id="@+id/price_est"
+                android:singleLine="true"
+                android:background="@null"
+                android:fontFamily="@font/font1"
+                android:textStyle="bold"
+                android:textSize="@dimen/txt_size_md1"
+                android:includeFontPadding="false"
+                android:textColor="@color/black"
+                android:layout_marginLeft="@dimen/sizesm1"
+
+                android:layout_centerVertical="true"
+                android:hint="@string/price_est"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/sdfv"
+            android:layout_below="@id/pricv_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_lg"
+            android:layout_toLeftOf="@id/right_icon"
+            android:paddingLeft="@dimen/margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/font_mid"
+                android:includeFontPadding="false"
+                android:text="@string/comfort_level"
+                android:textColor="@color/black"
+                android:textSize="@dimen/txt_size_lg" />
+
+
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_below="@id/sdfv"
+            android:layout_marginTop="@dimen/margin_md"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:layout_height="@dimen/size5">
+            <TextView
+                android:id="@+id/chk1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/font2"
+                android:includeFontPadding="false"
+                android:text="@string/start"
+                android:layout_marginRight="@dimen/margin"
+                android:gravity="center"
+                android:tag="0"
+                android:background="@drawable/round_ract01"
+                android:textColor="@color/dgry1"
+                android:textSize="@dimen/txt_size_md1"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:id="@+id/chk2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/font2"
+                android:includeFontPadding="false"
+                android:text="@string/economy"
+                android:layout_marginRight="@dimen/margin"
+                android:gravity="center"
+                android:tag="0"
+                android:background="@drawable/round_ract01"
+
+                android:textColor="@color/dgry1"
+                android:textSize="@dimen/txt_size_md1"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:id="@+id/chk3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/font2"
+                android:includeFontPadding="false"
+                android:text="@string/comfort"
+                android:layout_marginRight="@dimen/margin"
+                android:gravity="center"
+                android:tag="0"
+                android:background="@drawable/round_ract01"
+                android:textColor="@color/dgry1"
+                android:textSize="@dimen/txt_size_md1"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

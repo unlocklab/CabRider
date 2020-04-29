@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/margin_lg"
+    card_view:cardElevation="@dimen/margin"
+    card_view:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:paddingTop="@dimen/margin"
+        android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/card3"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size5"
+                android:layout_margin="@dimen/margin"
+                android:background="@drawable/round_ract4"
+                android:backgroundTint="@color/lgry"
+                android:padding="@dimen/margin">
+
+                <EditText
+                    android:id="@+id/search_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:layout_marginLeft="@dimen/margin"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:hint="@string/search"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/dgry"
+                    android:textSize="@dimen/txt_size_md" />
+            </RelativeLayout>
+
+        <ListView
+            android:id="@+id/gv1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/card3"
+            android:layout_margin="@dimen/margin"
+            android:divider="@color/dgry"
+            android:dividerHeight="1dp" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
