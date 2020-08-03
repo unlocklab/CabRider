@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cab Rider</string>
+    <string name="app_name">Rayd Rider</string>
     <string name="punch_line">Your punch line here</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="password">Password</string>
@@ -86,7 +86,7 @@
     <string name="trip_rejected">Trip Rejected</string>
     <string name="accepted">Accepted</string>
     <string name="track">Track</string>
-    <string name="noti_key">AIzaSyAPsCcfJty5Uz-YEIa8MbKTDRB0Xtqb0CQ</string>
+    <string name="noti_key">AAAAVoQ_-pI:APA91bG7rrFB7GWSH97ofCoaXbTehJKXLSi_zhmRwChOHHwE40jUxPF9bzD7VMcF1EQhv0dTkYAfz_1rQmkaIzR-33KBDXbuEs3K0P6pmDv7m5StDkOlRccCM_LORv_k6pWAWsU0vFEE</string>
     <string name="cancel">Cancel</string>
     <string name="ride_canceled_msg">Ride Canceled</string>
     <string name="schedule_ride">Schedule Ride</string>
@@ -110,4 +110,14 @@
     <string name="login_msg">Please Enter Details</string>
     <string name="refer_to_frnd">Refer to a Friend</string>
     <string name="nice_to_meet_you">Nice to meet you</string>
+    <string name="app_name1">Rayd</string>
+    <string name="app_name2">Rider</string>
+    <string name="req_for_width">Request Withdrawal</string>
+    <string name="width_msg">Your withdraw will process in 3 working days</string>
+    <string name="find_a_ride">Find a Ride</string>
+    <string name="category">Category</string>
+    <string name="no_driver_avail">Sorry!! No driver available now</string>
+    <string name="join_ride">Join Ride</string>
+    <string name="places_key">AIzaSyBxcJZpjs1OiOWcn7Glzv_so2bnaplaV28</string>
+    <string name="fetching_loc">Wait device fetching your location.</string>
 </resources>

@@ -72,7 +72,7 @@ public class RecentRides extends AppCompatActivity implements AdpListner {
             }
 
 
-            dialog1 = new BottomSheetDialog(RecentRides.this);
+            dialog1 = new BottomSheetDialog(RecentRides.this,R.style.CustomBottomSheetDialogTheme);
             dialog1.setCancelable(true);
             dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog1.setContentView(R.layout.feedback_pop);
@@ -192,7 +192,7 @@ public class RecentRides extends AppCompatActivity implements AdpListner {
                 dialog1.dismiss();
             }
 
-            dialog1 = new BottomSheetDialog(RecentRides.this);
+            dialog1 = new BottomSheetDialog(RecentRides.this,R.style.CustomBottomSheetDialogTheme);
             dialog1.setCancelable(true);
             dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog1.setContentView(R.layout.ride_est_pop);

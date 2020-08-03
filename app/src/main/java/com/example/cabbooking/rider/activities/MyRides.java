@@ -71,16 +71,28 @@ public class MyRides extends AppCompatActivity implements AdpListner {
     private void loadData() {
         try{
             DatabaseReference mDatabaseUser = FirebaseDatabase.getInstance().getReference(Const.trip_tbl);
-            mDatabaseUser.orderByChild(Const.rider_id).equalTo(userDto.getUserId()).addValueEventListener(new ValueEventListener() {
+            mDatabaseUser.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.getValue()!=null){
-                        l1 = new ArrayList<>();
-                        for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                            l1.add(dataSnapshot1.getValue(TripDto.class));
-                        }
+                    try {
+                        if (dataSnapshot.getValue() != null) {
+                            l1 = new ArrayList<>();
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                try {
+                                    TripDto tripDto = dataSnapshot1.getValue(TripDto.class);
+                                    if (tripDto.getRider_id().contains(userDto.getUserId())) {
+                                        l1.add(tripDto);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
 
-                        addAdp();
+                            addAdp();
+                        }
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
                     }
                 }
 
@@ -149,7 +161,7 @@ public class MyRides extends AppCompatActivity implements AdpListner {
             }
 
 
-            dialog1 = new BottomSheetDialog(MyRides.this);
+            dialog1 = new BottomSheetDialog(MyRides.this,R.style.CustomBottomSheetDialogTheme);
             dialog1.setCancelable(true);
             dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog1.setContentView(R.layout.feedback_pop);
@@ -210,7 +222,7 @@ public class MyRides extends AppCompatActivity implements AdpListner {
         }
 
 
-        dialog1 = new BottomSheetDialog(MyRides.this);
+        dialog1 = new BottomSheetDialog(MyRides.this,R.style.CustomBottomSheetDialogTheme);
         dialog1.setCancelable(true);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog1.setContentView(R.layout.ride_est_pop);

@@ -2,70 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_color">
-
-    <LinearLayout
-        android:id="@+id/bottom_opt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        android:orientation="vertical"
-        android:padding="@dimen/margin_md">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/size6"
-            android:background="@drawable/round_ract4"
-            android:backgroundTint="@color/app_color"
-            android:onClick="LoginNow">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:background="@null"
-                android:fontFamily="@font/font2"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:onClick="LoginNow"
-                android:singleLine="true"
-                android:text="@string/login"
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/txt_size_md1" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/size6"
-            android:layout_marginTop="@dimen/margin"
-            android:background="@drawable/round_ract4"
-            android:backgroundTint="@color/dgry"
-            android:onClick="RegNow">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:background="@null"
-                android:fontFamily="@font/font2"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:onClick="RegNow"
-                android:singleLine="true"
-                android:text="@string/signup"
-
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/txt_size_md1" />
-        </RelativeLayout>
-    </LinearLayout>
+    android:background="@color/white1">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_opt"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:paddingBottom="@dimen/margin_xxxxlg">
@@ -82,24 +23,99 @@
                 android:id="@+id/txt1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/margin_lg"
+                android:layout_centerVertical="true"
                 android:fontFamily="@font/font_mid"
                 android:includeFontPadding="false"
-                android:text="@string/app_name"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:textSize="@dimen/txt_size_xxlg" />
+                android:text="@string/app_name1"
+                android:textColor="@color/app_color"
+                android:textSize="@dimen/txt_size_xxxlg"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margin"
+                android:layout_toRightOf="@id/txt1"
+                android:fontFamily="@font/font_mid"
+                android:includeFontPadding="false"
+                android:text="@string/app_name2"
+                android:textColor="@color/black"
+                android:textSize="@dimen/txt_size_xxxlg" />
 
 
         </RelativeLayout>
     </RelativeLayout>
-    <ProgressBar
-        android:id="@+id/pb1"
-        android:layout_width="wrap_content"
-        android:indeterminateTint="@color/white"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/margin_xxlg"
-        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:id="@+id/bottom_opt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pb1"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_md"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size6"
+                android:background="@drawable/bt_bg"
+                android:onClick="LoginNow">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:fontFamily="@font/font2"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:onClick="LoginNow"
+                    android:singleLine="true"
+                    android:text="@string/login"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/txt_size_md1" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size6"
+                android:layout_marginTop="@dimen/margin"
+                android:background="@drawable/bt_bg1"
+                android:onClick="RegNow">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:fontFamily="@font/font2"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:onClick="RegNow"
+                    android:singleLine="true"
+                    android:text="@string/signup"
+
+                    android:textAllCaps="true"
+                    android:textColor="@color/dgry"
+                    android:textSize="@dimen/txt_size_md1" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/pb1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin_xxlg"
+            android:indeterminateTint="@color/app_color" />
+
+    </RelativeLayout>
 </RelativeLayout>

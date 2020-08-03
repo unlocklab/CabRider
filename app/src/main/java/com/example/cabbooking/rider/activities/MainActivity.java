@@ -1,6 +1,7 @@
 package com.example.cabbooking.rider.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -23,6 +25,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,10 +34,12 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -66,7 +71,6 @@ import com.example.cabbooking.rider.other.MapTasks;
 import com.example.cabbooking.rider.other.MySharedPref;
 import com.example.cabbooking.rider.other.Validations;
 import com.example.cabbooking.rider.services.BgProcess;
-import com.example.cabbooking.rider.services.GPSTracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -95,90 +99,70 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
-public class MainActivity extends AppCompatActivity implements  OnMapReadyCallback, AdpListner {
+public class MainActivity extends BaseActivity implements  OnMapReadyCallback {
 
     private DrawerLayout drawer;
     private Polyline my_line = null;
     private NavigationView navigationView;
-    private AutoCompleteTextView search_et, search_et1;
-    private AutoSuggestAdapter1 autoSuggestAdapter1 = null;
-    private AutoSuggestAdapter1 autoSuggestAdapter2 = null;
+    private TextView search_et, search_et1;
     private BottomSheetDialog dialog1 = null,dialog2 = null;
-    private static final int TRIGGER_AUTO_COMPLETE = 100;
-    private static final long AUTO_COMPLETE_DELAY = 300;
     private PriceDto priceDto = null;
-    private Handler handler, handler1;
-    private TextView category_txt;
-    private String category_txt1 = "", price_est1 = "",date_str = "";
+    private int SEARCH_ET = 0,SEARCH_ET1 = 1;
+//    private TextView category_txt;
+    private String date_str = "";
     private int ride_type = 0;
+    private boolean active = false;
     private boolean start = false,economy = false,comfort = false;
     private DatePickerDialog datePickerDialog = null;
     private RecyclerView menu_lv1;
-    private List<CatDto> categories = new ArrayList<>();
+//    private List<CatDto> categories = new ArrayList<>();
     private List<UserDto> drivers1 = new ArrayList<>();
     private ValueEventListener listener = null;
+    private boolean go = true;
     private List<Location> drivers = new ArrayList<>();
     private List<String> driverIds = new ArrayList<>();
     private List<Marker> driverMarkers = new ArrayList<>();
     private List<LatLng> markers = new ArrayList<>();
     private GoogleMap mMap;
-    private Location my_location = null;
     private List<MenuData> menus = new ArrayList<>();
     private ProgressDialog pd;
+    private Location my_location1 = null;
     private JSONObject legs = null;
     private HashMap<String, String> markerLocation = new HashMap<>();
-    private GPSTracker gps = null;
-    String str[] = new String[]{
-            android.Manifest.permission.INTERNET
-            , android.Manifest.permission.ACCESS_NETWORK_STATE
-            , Manifest.permission.ACCESS_COARSE_LOCATION
-            , Manifest.permission.ACCESS_FINE_LOCATION
-    };
 
-    private boolean checkIfAlreadyhavePermission() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private void requestReadPhoneStatePermission() {
-        ActivityCompat.requestPermissions(MainActivity.this, str,
-                1);
-    }
 
     public void ProNow(View v){
         startActivity(new Intent(getApplicationContext(),ProfileActivity.class));
     }
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main1);
+    protected int getLayoutResourceId() {
+        return R.layout.activity_main1;
+    }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         initPD();
         initUI();
         setMenu();
-        setupAutoCom();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        loadCats();
+//        loadCats();
         loadPrice();
     }
+
     private void setMenu() {
         try {
             menus = new ArrayList<>();
             menus.add(new MenuData(getString(R.string.home),R.drawable.home_icon));
             menus.add(new MenuData(getString(R.string.ride_history),R.drawable.history_icon));
             menus.add(new MenuData(getString(R.string.schedule_ride),R.drawable.user_icon));
+            menus.add(new MenuData(getString(R.string.future_ride),R.drawable.future_icon));
             menus.add(new MenuData(getString(R.string.settings),R.drawable.settings_icon));
             menus.add(new MenuData(getString(R.string.language),R.drawable.about_icon));
             menus.add(new MenuData(getString(R.string.logout),R.drawable.logout_icon));
@@ -225,171 +209,26 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
         pd.setMessage(getString(R.string.loading));
     }
 
-    private void setupAutoCom() {
-        try {
-            autoSuggestAdapter1 = new AutoSuggestAdapter1(this,
-                    android.R.layout.simple_dropdown_item_1line);
-
-            autoSuggestAdapter2 = new AutoSuggestAdapter1(this,
-                    android.R.layout.simple_dropdown_item_1line);
-
-            search_et.setThreshold(2);
-            search_et.setAdapter(autoSuggestAdapter1);
-
-            search_et1.setThreshold(2);
-            search_et1.setAdapter(autoSuggestAdapter2);
-
-            search_et.setOnItemClickListener(
-                    new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view,
-                                                final int position, long id) {
-                            try {
-                                search_et.setText(autoSuggestAdapter1.getObject(position).getString("description"));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
-            search_et1.setOnItemClickListener(
-                    new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view,
-                                                final int position, long id) {
-                            try {
-                                search_et1.setText(autoSuggestAdapter2.getObject(position).getString("description"));
-                                showFirstRidePop();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
-            search_et.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int
-                        count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before,
-                                          int count) {
-                    handler.removeMessages(TRIGGER_AUTO_COMPLETE);
-                    handler.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE,
-                            AUTO_COMPLETE_DELAY);
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
-
-            search_et1.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int
-                        count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before,
-                                          int count) {
-                    handler1.removeMessages(TRIGGER_AUTO_COMPLETE);
-                    handler1.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE,
-                            AUTO_COMPLETE_DELAY);
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
-
-            /*f
-             *handler for api calling
-             * */
-            handler = new Handler(new Handler.Callback() {
-                @Override
-                public boolean handleMessage(Message msg) {
-                    if (msg.what == TRIGGER_AUTO_COMPLETE) {
-                        if (!TextUtils.isEmpty(search_et.getText())) {
-                            makeApiCallConFilter(search_et, autoSuggestAdapter1);
-                        }
-                    }
-                    return false;
-                }
-            });
-
-            handler1 = new Handler(new Handler.Callback() {
-                @Override
-                public boolean handleMessage(Message msg) {
-                    if (msg.what == TRIGGER_AUTO_COMPLETE) {
-                        if (!TextUtils.isEmpty(search_et1.getText())) {
-                            makeApiCallConFilter(search_et1, autoSuggestAdapter2);
-                        }
-                    }
-                    return false;
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void makeApiCallConFilter(AutoCompleteTextView autoCompleteTextView, final AutoSuggestAdapter1 asADP) {
-        try {
-            String url = "";
-            if (my_location != null) {
-                url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?" +
-                        "input=" + autoCompleteTextView.getText().toString() +
-                        "&location=" + my_location.getLatitude() + "," + my_location.getLongitude() +
-                        "&radius=" + Const.radius +
-                        "&key=" + Const.google_api_key;
-            } else {
-                url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?" +
-                        "input=" + autoCompleteTextView.getText().toString() +
-                        "&radius=" + Const.radius +
-                        "&key=" + Const.google_api_key;
-            }
-
-
-            ApiCall.makeGET(this, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String mainObj) {
-
-                    try {
-                        System.out.println("asdfg---------------" + mainObj);
-                        JSONObject jk = new JSONObject(mainObj);
-                        if (jk.getString(Const.status).equals("OK")) {
-                            JSONArray results = jk.getJSONArray(Const.predictions);
-                            asADP.setData(results);
-                            asADP.notifyDataSetChanged();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                    System.out.println("asdfg----------error-----");
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        active = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        active = true;
+//        try {
+//            Const.hideKeyboardFrom(MainActivity.this, findViewById(R.id.rl2));
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//        }
         try{
             UserDto ldata = new Gson().fromJson(new MySharedPref().getData(getApplicationContext(), Const.ldata, "")
                     , UserDto.class);
+
             ((TextView)navigationView.getRootView().findViewById(R.id.txt1_head)).setText(ldata.getFname()+" "+ldata.getLname());
             final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference(Const.user_tbl);
             FirebaseInstanceId instanceID = FirebaseInstanceId.getInstance();
@@ -404,7 +243,16 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
                 System.out.println("get-----------stt----");
                 UserDto ldata = new Gson().fromJson(new MySharedPref().getData(getApplicationContext(), Const.ldata, "")
                         , UserDto.class);
-                startTracking(ldata);
+                if(ldata.getLocation()!=null
+                        && ldata.getLocation().length()>0) {
+                    my_location1 =  Const.getLocation(ldata.getLocation());
+                    getNearByDrivers(my_location1);
+                }
+                else{
+                    if(my_location1!=null){
+                        getNearByDrivers(my_location1);
+                    }
+                }
             }
         }
         catch (Exception e){
@@ -416,26 +264,17 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
         try {
             pd.show();
             String url = "";
-            if (my_location != null) {
-                if (findViewById(R.id.search_rl1).getVisibility() == View.GONE) {
-                    url = "https://maps.googleapis.com/maps/api/directions/json?" +
-                            "origin=" + my_location.getLatitude() + "," + my_location.getLongitude() +
-                            "&destination=" + search_et.getText().toString() +
-                            "&key=" + Const.google_api_key;
-                } else {
-                    url = "https://maps.googleapis.com/maps/api/directions/json?" +
-                            "origin=" + my_location.getLatitude() + "," + my_location.getLongitude() +
-                            "&destination=" + search_et1.getText().toString() +
-                            "&key=" + Const.google_api_key;
-                }
-
+            if (my_location1 != null) {
+                url = "https://maps.googleapis.com/maps/api/directions/json?" +
+                        "origin=" + search_et.getText().toString() +
+                        "&destination=" + search_et1.getText().toString() +
+                        "&key=" + Const.google_api_key;
 
                 ApiCall.makeGET(this, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String mainObj) {
                         pd.dismiss();
                         try {
-                            findViewById(R.id.loc_icon).setVisibility(View.GONE);
                             mMap.setOnCameraChangeListener(null);
                             System.out.println("asdfg---------------" + mainObj);
                             JSONObject jk = new JSONObject(mainObj);
@@ -444,47 +283,40 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
                                 JSONObject overview_polyline = routes.getJSONObject(0).getJSONObject(MapConst.overview_polyline);
                                 String encodedPoly = overview_polyline.getString(MapConst.points);
                                 my_line = MapTasks.showPolyOnMap(MainActivity.this, encodedPoly, mMap, my_line);
-
+                                go = false;
                                 legs = routes.getJSONObject(0)
                                         .getJSONArray(MapConst.legs)
                                         .getJSONObject(0);
                                 System.out.println("testr-----0---------");
 
-                                final LatLng myLoc = new LatLng(my_location.getLatitude(), my_location.getLongitude());
+                                final LatLng myLoc = new LatLng(my_location1.getLatitude(), my_location1.getLongitude());
 //
                                 Marker marker1 = mMap.addMarker(new MarkerOptions().position(myLoc));
-                                markerLocation.put(my_location.getLatitude() + "", "" + my_location.getLongitude());
+                                markerLocation.put(my_location1.getLatitude() + "", "" + my_location1.getLongitude());
                                 try {
-
-                                    marker1.setIcon(MapTasks.loadMarkImg(MainActivity.this, R.drawable.mark1));
+                                    marker1.setIcon(MapTasks.loadMarkImg(MainActivity.this, R.drawable.loc_icon1));
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
-                                drivers1 = Const.getNerestDriver(my_location,drivers1,start,economy,comfort);
+                                UserDto driver = Const.getNerestDriver(my_location1,drivers1,start,economy,comfort);
 
-                                chooseDriverPop(drivers1,legs);
-//                                showRideEstPop(legs);
 
-                                Const.hideKeyboardFrom(MainActivity.this, findViewById(R.id.rl2));
-                                search_et.setAdapter(null);
-                                search_et1.setAdapter(null);
-                                if (findViewById(R.id.search_rl1).getVisibility() == View.GONE) {
-                                    findViewById(R.id.search_rl).setVisibility(View.VISIBLE);
-                                    findViewById(R.id.search_rl1).setVisibility(View.VISIBLE);
-                                    search_et1.setText(search_et.getText().toString());
-                                    search_et.setText(MapTasks.getStrAddress(MainActivity.this
-                                            , my_location.getLatitude()
-                                            , my_location.getLongitude()));
+                                if(driver!=null) {
+//                                    showRideEstPop(legs,driver);
 
-                                    search_et.setHint(getString(R.string.from));
-                                    search_et1.setHint(getString(R.string.to));
+                                    System.out.println("testr----------ff-----");
+                                    showFirstRidePop(legs,driver);
+
+                                    System.out.println("testr----------ff1-----");
+//                                    if (dialog2 != null && dialog2.isShowing()) {
+//                                        dialog2.dismiss();
+//                                        dialog2 = null;
+//                                    }
                                 }
-                                if(dialog2!=null && dialog2.isShowing()) {
-                                    dialog2.dismiss();
-                                    dialog2 = null;
+                                else{
+                                    Toast.makeText(getApplicationContext(),getString(R.string.no_driver_avail),6).show();
                                 }
-                                setupAutoCom();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -503,140 +335,115 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
         }
     }
 
-    private void chooseDriverPop(List<UserDto> drivers, JSONObject legs) {
-        try{
-            dialog1 = new BottomSheetDialog(MainActivity.this);
-            dialog1.setCancelable(true);
-            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog1.setContentView(R.layout.list_pop);
-            dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+//    private void chooseDriverPop(List<UserDto> drivers, JSONObject legs) {
+//        try{
+//            dialog1 = new BottomSheetDialog(MainActivity.this,R.style.CustomBottomSheetDialogTheme);
+//            dialog1.setCancelable(true);
+//            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//            dialog1.setContentView(R.layout.list_pop);
+//            dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+//
+//            RecyclerView lv1 = dialog1.findViewById(R.id.lv1);
+//
+//            DriverAdp catAdp = new DriverAdp(MainActivity.this, drivers,legs,priceDto);
+//
+//            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+//            lv1.setLayoutManager(mLayoutManager);
+//            lv1.setItemAnimator(new DefaultItemAnimator());
+//            lv1.setNestedScrollingEnabled(false);
+//
+//            lv1.setAdapter(catAdp);
+//
+//            dialog1.show();
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
 
-            RecyclerView lv1 = dialog1.findViewById(R.id.lv1);
+//    private void loadCats() {
+//        final DatabaseReference mDatabaseUser = FirebaseDatabase.getInstance().getReference(Const.cat_tbl);
+//        mDatabaseUser.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.getValue() != null) {
+//                    categories = new ArrayList<>();
+//                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+//                        CatDto catDto = dataSnapshot1.getValue(CatDto.class);
+//                        categories.add(catDto);
+//                    }
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
-            DriverAdp catAdp = new DriverAdp(MainActivity.this, drivers,legs,priceDto);
-
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-            lv1.setLayoutManager(mLayoutManager);
-            lv1.setItemAnimator(new DefaultItemAnimator());
-            lv1.setNestedScrollingEnabled(false);
-
-            lv1.setAdapter(catAdp);
-
-            dialog1.show();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    private void loadCats() {
-        final DatabaseReference mDatabaseUser = FirebaseDatabase.getInstance().getReference(Const.cat_tbl);
-        mDatabaseUser.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    categories = new ArrayList<>();
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                        CatDto catDto = dataSnapshot1.getValue(CatDto.class);
-                        categories.add(catDto);
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void showFirstRidePop() {
+    private void showFirstRidePop(final JSONObject ride_data, final UserDto driverDt) {
         try {
-            dialog2 = new BottomSheetDialog(MainActivity.this);
+
+            System.out.println("testr----------ff--2---");
+            dialog2 = new BottomSheetDialog(MainActivity.this,R.style.CustomBottomSheetDialogTheme);
             dialog2.setCancelable(true);
             dialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog2.setContentView(R.layout.first_ride_pop);
             dialog2.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-            ImageView right_icon = dialog2.findViewById(R.id.right_icon);
-            category_txt = dialog2.findViewById(R.id.category_txt);
-            RelativeLayout category_rl = dialog2.findViewById(R.id.category_rl);
-            final EditText price_est = dialog2.findViewById(R.id.price_est);
-            final TextView chk1 = dialog2.findViewById(R.id.chk1);
-            final TextView chk2 = dialog2.findViewById(R.id.chk2);
-            final TextView chk3 = dialog2.findViewById(R.id.chk3);
 
-            Const.setChecked(MainActivity.this,chk1,start);
-            Const.setChecked(MainActivity.this,chk2,economy);
-            Const.setChecked(MainActivity.this,chk3,comfort);
+            System.out.println("testr----------ff--3---");
+            Button right_icon = dialog2.findViewById(R.id.right_icon);
 
-            Const.setChkHandler(MainActivity.this,chk1);
-            Const.setChkHandler(MainActivity.this,chk2);
-            Const.setChkHandler(MainActivity.this,chk3);
+            final TextView txt1 = dialog2.findViewById(R.id.txt1);
+            final TextView txt2 = dialog2.findViewById(R.id.txt2);
 
-            price_est.setText(price_est1);
-            category_txt.setText(category_txt1);
+            final TextView t1 = dialog2.findViewById(R.id.t1);
+            final TextView t2 = dialog2.findViewById(R.id.t2);
+            final TextView t3 = dialog2.findViewById(R.id.t3);
 
-            category_rl.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    category_txt.performClick();
-                }
-            });
 
-            category_txt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CatPop();
-                }
-            });
+            System.out.println("testr----------ff--4---");
+            double fair =  Double.parseDouble(priceDto.getPrice_pkm());
 
+            t1.setText("$"+fair);
+            t2.setText("$"+(fair+50));
+            t3.setText("$"+(fair+100));
+
+            final CardView card1 = dialog2.findViewById(R.id.card1);
+            final CardView card2 = dialog2.findViewById(R.id.card2);
+            final CardView card3 = dialog2.findViewById(R.id.card3);
+
+            System.out.println("testr----------ff--5---");
+            Const.setChecked(MainActivity.this,dialog2,start,economy,comfort);
+            Const.setChkHandler(MainActivity.this,card1,card2,card3);
+
+
+            txt1.setText(search_et.getText().toString().substring(0,20));
+            txt2.setText(search_et1.getText().toString().substring(0,20));
+
+            System.out.println("testr----------ff--6---");
             right_icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    new AlertDialog.Builder(MainActivity.this)
-                            .setTitle("Ride Type")
-                            .setMessage("Please select ride type")
+//
+                    start  = Const.getChecked(card1);
+                    economy  = Const.getChecked(card2);
+                    comfort  = Const.getChecked(card3);
 
-                            .setPositiveButton(R.string.one_time, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog1, int which) {
-
-                                    start  = Const.getChecked(chk1);
-                                    economy  = Const.getChecked(chk2);
-                                    comfort  = Const.getChecked(chk3);
-
-                                    price_est1  = price_est.getText().toString();
-                                    category_txt1 = category_txt.getText().toString();
-                                    ride_type = 0;
-                                    shceduleRide();
-                                }
-                            })
-
-                            .setNegativeButton(R.string.future_ride, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog1, int which) {
-
-
-                                    start  = Const.getChecked(chk1);
-                                    economy  = Const.getChecked(chk2);
-                                    comfort  = Const.getChecked(chk3);
-
-                                    price_est1  = price_est.getText().toString();
-                                    category_txt1 = category_txt.getText().toString();
-                                    ride_type = 1;
-                                    shceduleRide();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-
+                    ride_type = 0;
+                    showRideEstPop(ride_data,driverDt);
 
                 }
             });
 
+            System.out.println("testr----------ff--7---");
             dialog2.show();
 
+            System.out.println("testr----------ff--8---");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -646,31 +453,22 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
     private void shceduleRide() {
         if (findViewById(R.id.search_rl1).getVisibility() == View.GONE) {
             if (search_et.getText().toString().length() > 0) {
-                if (category_txt.getText().toString().length() > 0) {
-                    if(ride_type==1){
-                        datePickerDialog.show();
-                    }
-                    else {
-                        getDirationsCall();
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Please Choose Vehicle Category", 6).show();
+                if(ride_type==1){
+                    datePickerDialog.show();
+                }
+                else {
+                    getDirationsCall();
                 }
             } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.where_hint), 6).show();
             }
         } else {
             if (search_et1.getText().toString().length() > 0) {
-                if (category_txt.getText().toString().length() > 0) {
-
-                    if(ride_type==1){
-                        datePickerDialog.show();
-                    }
-                    else {
-                        getDirationsCall();
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Please Choose Vehicle Category", 6).show();
+                if(ride_type==1){
+                    datePickerDialog.show();
+                }
+                else {
+                    getDirationsCall();
                 }
             } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.where_hint), 6).show();
@@ -684,28 +482,28 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
             if(dialog2!=null && dialog2.isShowing()){
                 dialog2.dismiss();
             }
-            final BottomSheetDialog dialog = new BottomSheetDialog(MainActivity.this);
-            dialog.setCancelable(true);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog2 = new BottomSheetDialog(MainActivity.this,R.style.CustomBottomSheetDialogTheme);
+            dialog2.setCancelable(true);
+            dialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
             View contentView = View.inflate(MainActivity.this, R.layout.ride_est_pop, null);
-            dialog.setContentView(contentView);
+            dialog2.setContentView(contentView);
 
             ((View) contentView.getParent()).setBackgroundColor(getResources().getColor(android.R.color.transparent));
 
 
 
-            ImageView right_icon = dialog.findViewById(R.id.right_icon);
+            ImageView right_icon = dialog2.findViewById(R.id.right_icon);
 
-            TextView txt1 = dialog.findViewById(R.id.txt1);
-            TextView txt2 = dialog.findViewById(R.id.txt2);
-            TextView txt21 = dialog.findViewById(R.id.txt21);
+            TextView txt1 = dialog2.findViewById(R.id.txt1);
+            TextView txt2 = dialog2.findViewById(R.id.txt2);
+            TextView txt21 = dialog2.findViewById(R.id.txt21);
 
-            final TextView fare_txt = dialog.findViewById(R.id.fare_txt);
-            final TextView distance_txt = dialog.findViewById(R.id.distance_txt);
-            final TextView duration_txt = dialog.findViewById(R.id.duration_txt);
-            final TextView pay_type_txt = dialog.findViewById(R.id.pay_type_txt);
-            RatingBar rt1 = dialog.findViewById(R.id.rt1);
+            final TextView fare_txt = dialog2.findViewById(R.id.fare_txt);
+            final TextView distance_txt = dialog2.findViewById(R.id.distance_txt);
+            final TextView duration_txt = dialog2.findViewById(R.id.duration_txt);
+            final TextView pay_type_txt = dialog2.findViewById(R.id.pay_type_txt);
+            RatingBar rt1 = dialog2.findViewById(R.id.rt1);
 
             System.out.println("testr-----1---------");
 
@@ -733,9 +531,7 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
                 }
 
                 fare_txt.setText("$" + String.format("%.2f", fair));
-                if(fair>Double.parseDouble(price_est1)){
-                    Toast.makeText(getApplicationContext(),getString(R.string.low_est_fair_msg),6).show();
-                }
+
 
 
                 right_icon.setOnClickListener(new View.OnClickListener() {
@@ -788,11 +584,8 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
                             }
                             startActivity(intent);
 
-                            search_et.setText("");
-                            search_et1.setText("");
-                            findViewById(R.id.search_rl1).setVisibility(View.GONE);
 
-                            getNearByDrivers(my_location);
+                            getNearByDrivers(my_location1);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -800,7 +593,7 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
                     }
                 });
 
-                dialog.show();
+                dialog2.show();
             }
             else{
                 Toast.makeText(getApplicationContext(),"No Driver is avail now please wait",6).show();
@@ -816,102 +609,72 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        UserDto ldata = new Gson().fromJson(new MySharedPref().getData(getApplicationContext(), Const.ldata, "")
-                , UserDto.class);
-        startTracking(ldata);
-
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
+            public void onMapLoaded() {
                 try {
-                    search_et.setText(MapTasks.getAddress(MainActivity.this
-                            , cameraPosition.target.latitude, cameraPosition.target.longitude));
-
-                    my_location = new Location("");
-                    my_location.setLatitude(cameraPosition.target.latitude);
-                    my_location.setLongitude(cameraPosition.target.longitude);
+                    UserDto ldata = new Gson().fromJson(new MySharedPref().getData(getApplicationContext(), Const.ldata, "")
+                            , UserDto.class);
+                    if (ldata.getLocation() != null
+                            && ldata.getLocation().length() > 0) {
+                        try {
+                            my_location1 = Const.getLocation(ldata.getLocation());
+                            getNearByDrivers(my_location1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            if (my_location != null) {
+                                my_location1 = my_location;
+                                getNearByDrivers(my_location1);
+                            }
+                        }
+                    } else {
+                        if (my_location != null) {
+                            my_location1 = my_location;
+                            getNearByDrivers(my_location1);
+                        }
+                    }
                 }
-                catch (Exception e){
+                catch (Exception e) {
                     e.printStackTrace();
+                    if (my_location != null) {
+                        my_location1 = my_location;
+                        getNearByDrivers(my_location1);
+                    }
                 }
             }
         });
-
     }
 
 
+    private class MyBgTask extends AsyncTask {
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void startTracking(UserDto ldata) {
-        System.out.println("get-----------par----"+checkIfAlreadyhavePermission());
-        if (checkIfAlreadyhavePermission()) {
-            if (gps == null) {
-                try {
-                    gps = new GPSTracker(MainActivity.this, ldata);
 
-                    System.out.println("get-----------gps----"+gps.canGetLocation());
-                    if (gps.canGetLocation()) {
-                        getLoca();
-                    } else {
-
-                        System.out.println("get-----------sett----");
-                        gps.showSettingsAlert();
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            try{
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        search_et.setText(MapTasks.getAddress(MainActivity.this
+                                , my_location1.getLatitude(), my_location1.getLongitude()));
                     }
+                });
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
-            else{
-                if (gps.canGetLocation()) {
-                    getLoca();
-                } else {
-
-                    System.out.println("get-----------sett----");
-                    gps.showSettingsAlert();
-                }
+            catch (Exception e){
+                e.printStackTrace();
             }
-        } else {
-            requestReadPhoneStatePermission();
+            return null;
         }
     }
 
-    private void getLoca() {
-        System.out.println("get-----------loc----");
-        my_location = gps.getLocation();
-        if(my_location!=null) {
-            markerLocation = new HashMap<>();
-
-            getNearByDrivers(my_location);
-        }
-        else{
-            getLoca();
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        UserDto ldata = new Gson().fromJson(new MySharedPref().getData(getApplicationContext(), Const.ldata, "")
-                , UserDto.class);
-        startTracking(ldata);
-    }
 
     private void getNearByDrivers(final Location location1) {
         try {
+            new MyBgTask().execute();
+//            pd.show();
             markers = new ArrayList<>();
             final LatLng myLoc = new LatLng(location1.getLatitude(), location1.getLongitude());
-//
-//            Marker marker1 = mMap.addMarker(new MarkerOptions().position(myLoc));
-//            markerLocation.put(location1.getLatitude() + "", "" + location1.getLongitude());
-//            try {
-//
-//                marker1.setIcon(MapTasks.loadMarkImg(MainActivity.this, R.drawable.loc_icon2));
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
 
             markers.add(myLoc);
 
@@ -929,29 +692,14 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
                         markerLocation = new HashMap<>();
                         mMap.clear();
 
-
-//                        Marker marker1 = mMap.addMarker(new MarkerOptions().position(myLoc));
-//                        markerLocation.put(location1.getLatitude() + "", "" + location1.getLongitude());
-//                        try {
-//
-//                            marker1.setIcon(MapTasks.loadMarkImg(MainActivity.this, R.drawable.loc_icon2));
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-
-
                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                             try {
                                 UserDto userDto = dataSnapshot1.getValue(UserDto.class);
-                                if (userDto.getStatus().equals("1")) {
-                                    JSONObject jk = new JSONObject(userDto.getLocation());
-                                    Location location = new Location("");
+                                if (userDto.getStatus().equals("1")
+                                        && userDto.getLocation().length()>0) {
+                                    Location location = MapTasks.getLocBYLatLng(userDto.getLocation());
 
-                                    location.setLatitude(jk.getDouble("mLatitude"));
-                                    location.setLongitude(jk.getDouble("mLongitude"));
-                                    location.setAltitude(jk.getDouble("mAltitude"));
-
-
+                                    System.out.println("test_driver------1--------"+location1.distanceTo(location));
 
                                     if (location1.distanceTo(location) < (10 * 1000)) {
                                         drivers.add(location);
@@ -980,9 +728,13 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
+//                                UserDto userDto = dataSnapshot1.getValue(UserDto.class);
+//                                drivers.add(null);
+//                                drivers1.add(userDto);
+//                                driverIds.add(dataSnapshot1.getKey());
                             }
 
-                            MapTasks.zoomCamera(mMap, markers);
+                            MapTasks.zoomCamera(MainActivity.this,mMap, markers);
                         }
                     }
                 }
@@ -990,7 +742,7 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     mDatabaseUser.removeEventListener(listener);
-                    MapTasks.zoomCamera(mMap, markers);
+                    MapTasks.zoomCamera(MainActivity.this,mMap, markers);
                 }
             };
 
@@ -1006,6 +758,104 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
         search_et = findViewById(R.id.search_et);
         search_et1 = findViewById(R.id.search_et1);
 
+        search_et.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(active) {
+                    Intent i = new Intent(MainActivity.this, LocationChooser.class);
+                    i.putExtra(Const.title, getString(R.string.your_location));
+                    try {
+                        i.putExtra(Const.data, my_location1.getLatitude() + "," + my_location1.getLongitude());
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    startActivityForResult(i, SEARCH_ET);
+                }
+                return true;
+            }
+        });
+        findViewById(R.id.search_icon).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(active) {
+                    Intent i = new Intent(MainActivity.this, LocationChooser.class);
+                    i.putExtra(Const.title, getString(R.string.your_location));
+                    try {
+                        i.putExtra(Const.data, my_location1.getLatitude() + "," + my_location1.getLongitude());
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    startActivityForResult(i, SEARCH_ET);
+                }
+                return true;
+            }
+        });
+        findViewById(R.id.search_rl).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(active) {
+                    Intent i = new Intent(MainActivity.this, LocationChooser.class);
+                    i.putExtra(Const.title, getString(R.string.your_location));
+                    try {
+                        i.putExtra(Const.data, my_location1.getLatitude() + "," + my_location1.getLongitude());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    startActivityForResult(i, SEARCH_ET);
+                }
+                return true;
+            }
+        });
+        findViewById(R.id.search_icon1).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(active) {
+                    Intent i = new Intent(MainActivity.this, LocationChooser.class);
+                    i.putExtra(Const.title, getString(R.string.where_hint));
+                    try {
+                        i.putExtra(Const.data, my_location1.getLatitude() + "," + my_location1.getLongitude());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    startActivityForResult(i, SEARCH_ET1);
+                }
+                return true;
+            }
+        });
+        search_et1.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(active) {
+                    Intent i = new Intent(MainActivity.this, LocationChooser.class);
+                    i.putExtra(Const.title, getString(R.string.where_hint));
+                    try {
+                        i.putExtra(Const.data, my_location1.getLatitude() + "," + my_location1.getLongitude());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    startActivityForResult(i, SEARCH_ET1);
+                }
+                return true;
+            }
+        });
+        findViewById(R.id.search_rl1).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(active) {
+                    Intent i = new Intent(MainActivity.this, LocationChooser.class);
+                    i.putExtra(Const.title, getString(R.string.where_hint));
+                    try {
+                        i.putExtra(Const.data, my_location1.getLatitude() + "," + my_location1.getLongitude());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    startActivityForResult(i, SEARCH_ET1);
+                }
+                return true;
+            }
+        });
         menu_lv1 = navigationView.getRootView().findViewById(R.id.menu_lv1);
 
 
@@ -1036,58 +886,71 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
-        findViewById(R.id.search_icon).setOnClickListener(new View.OnClickListener() {
+
+        findViewById(R.id.right_arr1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                search_et.setText("");
+                findViewById(R.id.right_arr).performClick();
             }
         });
-
-        findViewById(R.id.search_icon1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                search_et1.setText("");
-            }
-        });
-
         findViewById(R.id.right_arr).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Validations.valEdit(MainActivity.this,search_et,getString(R.string.your_location))
-                && Validations.valEdit(MainActivity.this,search_et1,getString(R.string.destination))
+                if(Validations.valEdit2(MainActivity.this,search_et,getString(R.string.your_location))
+                && Validations.valEdit2(MainActivity.this,search_et1,getString(R.string.destination))
                 && Const.isOnline(MainActivity.this))
-                showFirstRidePop();
+//                showFirstRidePop();
+                shceduleRide();
             }
         });
 
 
     }
 
-    private void CatPop() {
-        try {
-            dialog1 = new BottomSheetDialog(MainActivity.this);
-            dialog1.setCancelable(true);
-            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog1.setContentView(R.layout.list_pop);
-            dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK){
+            System.out.println("result---------------"+data.getStringExtra("result"));
 
-            RecyclerView lv1 = dialog1.findViewById(R.id.lv1);
-
-            CatAdp catAdp = new CatAdp(MainActivity.this, categories);
-
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-            lv1.setLayoutManager(mLayoutManager);
-            lv1.setItemAnimator(new DefaultItemAnimator());
-            lv1.setNestedScrollingEnabled(false);
-
-            lv1.setAdapter(catAdp);
-
-            dialog1.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (requestCode == SEARCH_ET) {
+                search_et.setText(data.getStringExtra("result"));
+            }
+            else{
+                search_et1.setText(data.getStringExtra("result"));
+            }
         }
+        else if (resultCode == Activity.RESULT_CANCELED) {
+//            Toast.makeText(getApplicationContext(),"Can't Fetch Location",6).show();
+        }
+
     }
+
+//    private void CatPop() {
+//        try {
+//            dialog1 = new BottomSheetDialog(MainActivity.this,R.style.CustomBottomSheetDialogTheme);
+//            dialog1.setCancelable(true);
+//            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//            dialog1.setContentView(R.layout.list_pop);
+//            dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+//
+//            RecyclerView lv1 = dialog1.findViewById(R.id.lv1);
+//
+//            CatAdp catAdp = new CatAdp(MainActivity.this, categories);
+//
+//            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+//            lv1.setLayoutManager(mLayoutManager);
+//            lv1.setItemAnimator(new DefaultItemAnimator());
+//            lv1.setNestedScrollingEnabled(false);
+//
+//            lv1.setAdapter(catAdp);
+//
+//            dialog1.show();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     @Override
@@ -1123,14 +986,14 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     @Override
     public void click1(int position) {
-        try {
-            category_txt.setText(categories.get(position).getCat_name());
-            if (dialog1 != null) {
-                dialog1.dismiss();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            category_txt.setText(categories.get(position).getCat_name());
+//            if (dialog1 != null) {
+//                dialog1.dismiss();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -1138,6 +1001,9 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
         switch (menus.get(position).getIcon()) {
             case R.drawable.home_icon:
 
+                break;
+            case R.drawable.future_icon:
+                startActivity(new Intent(getApplicationContext(), NearByRides.class));
                 break;
             case R.drawable.history_icon:
                 startActivity(new Intent(getApplicationContext(), MyRides.class));
@@ -1180,12 +1046,12 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     @Override
     public void click3(int position) {
-        try{
-            showRideEstPop(legs,drivers1.get(position));
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+//        try{
+//            showRideEstPop(legs,drivers1.get(position));
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -1203,9 +1069,31 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     }
 
-    @Override
-    public void click7(int position) {
 
+
+    @Override
+    protected void setLocation1(Location location) {
+        try{
+            if(drivers==null || drivers.size()<=0 && go) {
+                my_location1 = location;
+                if (my_location1 != null) {
+                    markerLocation = new HashMap<>();
+                    UserDto ldata = new Gson().fromJson(new MySharedPref().getData(getApplicationContext(), Const.ldata, "")
+                            , UserDto.class);
+                    if (ldata.getLocation() != null
+                            && ldata.getLocation().length() <= 0) {
+                        ldata.setLocation(my_location1.getLatitude() + "," + my_location1.getLongitude());
+                        new MySharedPref().saveData(getApplicationContext(), Const.ldata, new Gson().toJson(ldata) + "");
+                        DatabaseReference mDatabaseUser = FirebaseDatabase.getInstance().getReference(Const.user_tbl);
+                        mDatabaseUser.child(ldata.getUserId()).child(UserConst.location).setValue(my_location1.getLatitude() + "," + my_location1.getLongitude());
+                    }
+                    getNearByDrivers(my_location1);
+                }
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

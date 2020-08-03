@@ -25,7 +25,6 @@
                 android:layout_height="@dimen/size5"
                 android:layout_alignParentRight="true"
                 android:background="@drawable/circle_shape"
-                android:backgroundTint="@color/app_color"
                 android:padding="@dimen/margin"
                 android:src="@drawable/right_arrow"
                 android:tint="@color/white" />
@@ -59,7 +58,7 @@
                 android:padding="@dimen/margin1"
                 android:layout_below="@id/rt1"
                 android:background="@drawable/round_ract0"
-               >
+                >
 
 
                 <EditText

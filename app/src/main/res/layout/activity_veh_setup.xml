@@ -2,199 +2,253 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:id="@+id/rl_main"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white1"
+    android:orientation="vertical"
     >
-    <include
-        android:id="@+id/rl1"
-        layout="@layout/tool2" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_below="@id/rl1"
-        android:padding="@dimen/margin_md"
         android:weightSum="1"
+
         android:layout_height="match_parent">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight=".30"
-            android:gravity="bottom">
-
-            <RelativeLayout
-                android:id="@+id/imv_rl"
-                android:layout_width="@dimen/size7"
-                android:layout_height="@dimen/size7"
-                android:layout_centerHorizontal="true">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/circle_shape"
-                    android:backgroundTint="@color/lgry"
-                    android:padding="@dimen/margin_lg"
-                    android:src="@drawable/veh_icon"
-                    android:tint="@color/dgry" />
-
-                <ImageView
-                    android:id="@+id/imv"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop" />
-                <ImageView
-                    android:layout_width="@dimen/size4"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/cam_icon"
-                    android:tint="@color/white"
-                    android:background="@drawable/circle_shape"
-                    android:backgroundTint="@color/app_color"
-                    android:padding="@dimen/margin"
-                    android:layout_height="@dimen/size4"/>
-            </RelativeLayout>
-
-
-            <TextView
-                android:id="@+id/txt2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/imv_rl"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/margin_lg"
-                android:fontFamily="@font/font1"
-                android:includeFontPadding="false"
-                android:text="@string/update_dt_here"
-                android:textColor="@color/dgry1"
-                android:textSize="@dimen/txt_size_lg" />
-        </RelativeLayout>
-
-        <LinearLayout
+            android:backgroundTint="@color/app_color"
+            android:background="@drawable/bg_vec"
+            android:layout_weight=".40"/>
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight=".70"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/margin"
-            android:paddingTop="@dimen/margin_lg"
-            android:paddingRight="@dimen/margin">
+            android:layout_weight=".60"/>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:background="@drawable/round_ract4"
-                android:backgroundTint="@color/lgry"
-                android:layout_marginTop="@dimen/margin_md"
-                android:paddingLeft="@dimen/margin1"
-                android:paddingRight="@dimen/margin"
-                android:layout_height="@dimen/size6">
-                <ImageView
-                    android:id="@+id/email_icon"
-                    android:layout_width="@dimen/size3"
-                    android:src="@drawable/veh_icon"
-                    android:tint="@color/dgry"
+    </LinearLayout>
+    <ImageView
+        android:layout_width="@dimen/size4"
+        android:src="@drawable/back_icon"
+        android:tint="@color/white"
+        android:scaleX=".8"
+        android:scaleY=".8"
+        android:layout_margin="@dimen/margin1"
+        android:onClick="NavNow"
+        android:layout_height="@dimen/size4"/>
+    <TextView
+        android:id="@+id/txt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font2"
+        android:includeFontPadding="false"
+        android:text="@string/vehical_setup"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/size62"
+        android:textColor="@color/white1"
+        android:textSize="@dimen/txt_size_xlg" />
+    <RelativeLayout
+        android:id="@+id/imv_rl"
+        android:layout_width="@dimen/size7"
+        android:layout_below="@id/txt1"
+        android:layout_marginTop="@dimen/margin_lg"
+        android:layout_height="@dimen/size7"
+        android:layout_centerHorizontal="true">
 
-                    android:padding="@dimen/sizesm1"
-                    android:layout_centerVertical="true"
-                    android:layout_height="@dimen/size3"/>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:background="@null"
-                    android:layout_toRightOf="@id/email_icon"
-                    android:layout_marginLeft="@dimen/margin1"
-                    android:singleLine="true"
-                    android:inputType="text"
-                    android:textSize="@dimen/txt_size_md"
-                    android:hint="@string/veh_number"
-                    android:includeFontPadding="false"
-                    android:textColor="@color/dgry"
-                    android:textColorHint="@color/dgry"
-                    android:layout_centerVertical="true"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:background="@drawable/round_ract4"
-                android:backgroundTint="@color/lgry"
-                android:layout_marginTop="@dimen/margin_md"
-                android:paddingLeft="@dimen/margin1"
-                android:paddingRight="@dimen/margin"
-                android:layout_height="@dimen/size6">
-                <ImageView
-                    android:id="@+id/cat_icon"
-                    android:layout_width="@dimen/size3"
-                    android:src="@drawable/cat_icon"
-                    android:tint="@color/dgry"
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/circle_shape"
+            android:backgroundTint="@color/lgry"
+            android:padding="@dimen/margin_lg"
+            android:src="@drawable/veh_icon"
+            android:tint="@color/dgry" />
 
-                    android:padding="@dimen/sizesm1"
-                    android:layout_centerVertical="true"
-                    android:layout_height="@dimen/size3"/>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:background="@null"
-                    android:layout_toRightOf="@id/cat_icon"
-                    android:layout_marginLeft="@dimen/margin1"
-                    android:singleLine="true"
-                    android:inputType="text"
-                    android:textSize="@dimen/txt_size_md"
-                    android:hint="@string/car_category"
-                    android:includeFontPadding="false"
-                    android:textColor="@color/dgry"
-                    android:textColorHint="@color/dgry"
-                    android:layout_centerVertical="true"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:background="@drawable/round_ract4"
-                android:backgroundTint="@color/lgry"
-                android:layout_marginTop="@dimen/margin_md"
-                android:paddingLeft="@dimen/margin1"
-                android:paddingRight="@dimen/margin"
-                android:layout_height="@dimen/size6">
-                <ImageView
-                    android:id="@+id/pass_icon"
-                    android:layout_width="@dimen/size3"
-                    android:src="@drawable/lic_no"
-                    android:tint="@color/dgry"
-                    android:padding="1dp"
-                    android:layout_centerVertical="true"
-                    android:layout_height="@dimen/size3"/>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:background="@null"
-                    android:layout_toRightOf="@id/pass_icon"
-                    android:layout_marginLeft="@dimen/margin1"
-                    android:singleLine="true"
-                    android:inputType="text"
-                    android:textSize="@dimen/txt_size_md"
-                    android:hint="@string/licence_no"
-                    android:includeFontPadding="false"
-                    android:textColor="@color/dgry"
-                    android:textColorHint="@color/dgry"
-                    android:layout_centerVertical="true"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
+        <ImageView
+            android:id="@+id/imv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+        <ImageView
+            android:layout_width="@dimen/size4"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/cam_icon"
+            android:tint="@color/white"
+            android:background="@drawable/circle_shape"
+            android:backgroundTint="@color/app_color"
+            android:padding="@dimen/margin"
+            android:layout_height="@dimen/size4"/>
+    </RelativeLayout>
 
-            <RelativeLayout
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_below="@id/imv_rl"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin1"
+        android:layout_margin="@dimen/margin_lg"
+        app:cardBackgroundColor="@color/white1"
+        android:elevation="@dimen/margin"
+        app:cardCornerRadius="@dimen/margin_xlg"
+        android:backgroundTint="@color/white1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:backgroundTint="@color/app_color">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/size6"
-                android:layout_marginTop="@dimen/margin_xlg"
-                android:background="@drawable/round_ract4"
-                android:backgroundTint="@color/app_color"
-                android:onClick="LoginNow">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_md"
+                android:weightSum="2">
+
+
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/txt2"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@null"
+                    android:layout_marginTop="@dimen/margin_lg"
+                    android:layout_marginRight="@dimen/margin_xlg"
                     android:fontFamily="@font/font2"
-                    android:gravity="center"
+                    android:layout_marginLeft="@dimen/margin"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="@dimen/sizesm1"
+                    android:text="@string/veh_number"
+                    android:textColor="@color/dgry"
+                    android:textSize="@dimen/txt_size_lg" />
+
+                <RelativeLayout
+                    android:id="@+id/bgh"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size6"
+                    android:layout_below="@id/txt2"
+                    android:layout_marginTop="@dimen/margin"
+                    android:background="@drawable/round_ract0"
+                    android:paddingLeft="@dimen/margin1"
+                    android:paddingRight="@dimen/margin">
+
+                    <EditText
+                        android:id="@+id/et1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/sizesm1"
+                        android:background="@null"
+                        android:fontFamily="@font/font1"
+                        android:hint="@string/veh_number"
+                        android:includeFontPadding="false"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/txt_size_md1"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bgh"
+                    android:layout_marginTop="@dimen/margin_xlg"
+                    android:layout_marginRight="@dimen/margin_xlg"
+                    android:fontFamily="@font/font2"
+                    android:layout_marginLeft="@dimen/margin"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="@dimen/sizesm1"
+                    android:text="@string/licence_no"
+                    android:textColor="@color/dgry"
+                    android:textSize="@dimen/txt_size_lg" />
+
+                <RelativeLayout
+                    android:id="@+id/bgh2"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size6"
+                    android:layout_below="@id/txt21"
+                    android:layout_marginTop="@dimen/margin"
+                    android:background="@drawable/round_ract0"
+                    android:paddingLeft="@dimen/margin1"
+                    android:paddingRight="@dimen/margin">
+
+                    <EditText
+                        android:id="@+id/et2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/sizesm1"
+                        android:background="@null"
+                        android:fontFamily="@font/font1"
+                        android:hint="@string/licence_no"
+                        android:includeFontPadding="false"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/txt_size_md1"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/txt21"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bgh"
+                    android:layout_marginTop="@dimen/margin_xlg"
+                    android:layout_marginRight="@dimen/margin_xlg"
+                    android:fontFamily="@font/font2"
+                    android:layout_marginLeft="@dimen/margin"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="@dimen/sizesm1"
+                    android:text="@string/car_category"
+                    android:textColor="@color/dgry"
+                    android:textSize="@dimen/txt_size_lg" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size6"
+                    android:layout_below="@id/txt21"
+                    android:layout_marginTop="@dimen/margin"
+                    android:background="@drawable/round_ract0"
+                    android:paddingLeft="@dimen/margin1"
+                    android:paddingRight="@dimen/margin">
+
+                    <EditText
+                        android:id="@+id/et3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/sizesm1"
+                        android:background="@null"
+                        android:fontFamily="@font/font1"
+                        android:hint="@string/car_category"
+                        android:includeFontPadding="false"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/txt_size_md1"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/bt1"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size6"
+                    android:layout_below="@id/bgh2"
+                    android:layout_marginTop="@dimen/margin_xxlg"
+                    android:layout_marginBottom="@dimen/sizesm1"
+                    android:background="@drawable/bt_bg"
+                    android:fontFamily="@font/font2"
+
                     android:includeFontPadding="false"
                     android:onClick="LoginNow"
-                    android:singleLine="true"
-                    android:text="@string/update"
-                    android:textAllCaps="true"
+                    android:text="@string/submit"
+                    android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/txt_size_md1" />
-            </RelativeLayout>
-        </LinearLayout>
-    </LinearLayout>
+                    android:textSize="@dimen/txt_size_lg" />
+
+
+
+            </LinearLayout>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>

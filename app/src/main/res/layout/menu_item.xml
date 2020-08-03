@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl1"
     android:layout_width="match_parent"
-    android:layout_marginBottom="@dimen/margin_lg"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <ImageView
         android:id="@+id/imv"
         android:layout_width="@dimen/size3"
+        android:layout_marginLeft="@dimen/margin_lg"
         android:layout_height="@dimen/size3"
         android:tint="@color/black"
         android:layout_centerVertical="true"
@@ -27,5 +27,10 @@
         android:text="@string/home"
         android:textColor="@color/black"
         android:textSize="@dimen/txt_size_md1" />
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/gry"
+        android:layout_below="@id/imv"
+        android:layout_marginTop="@dimen/size4"
+        android:layout_height="1dp"/>
 </RelativeLayout>

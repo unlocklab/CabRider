@@ -2,173 +2,253 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:id="@+id/rl_main"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white1"
+    android:orientation="vertical"
     >
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/rl1"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1"
+
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:backgroundTint="@color/app_color"
+            android:background="@drawable/bg_vec"
+            android:layout_weight=".40"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".60"/>
+
+    </LinearLayout>
+    <ImageView
+        android:layout_width="@dimen/size4"
         android:src="@drawable/back_icon"
         android:tint="@color/white"
         android:scaleX=".8"
         android:scaleY=".8"
-        android:layout_margin="@dimen/margin"
+        android:layout_margin="@dimen/margin1"
         android:onClick="NavNow"
-        android:layout_height="wrap_content"/>
-    <LinearLayout
+        android:layout_height="@dimen/size4"/>
+    <TextView
+        android:id="@+id/txt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font2"
+        android:includeFontPadding="false"
+        android:text="@string/vehical_setup"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/size62"
+        android:textColor="@color/white1"
+        android:textSize="@dimen/txt_size_xlg" />
+    <RelativeLayout
+        android:id="@+id/imv_rl"
+        android:layout_width="@dimen/size7"
+        android:layout_below="@id/txt1"
+        android:layout_marginTop="@dimen/margin_lg"
+        android:layout_height="@dimen/size7"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/circle_shape"
+            android:backgroundTint="@color/lgry"
+            android:padding="@dimen/margin_lg"
+            android:src="@drawable/veh_icon"
+            android:tint="@color/dgry" />
+
+        <ImageView
+            android:id="@+id/imv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+        <ImageView
+            android:layout_width="@dimen/size4"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/cam_icon"
+            android:tint="@color/white"
+            android:background="@drawable/circle_shape"
+            android:backgroundTint="@color/app_color"
+            android:padding="@dimen/margin"
+            android:layout_height="@dimen/size4"/>
+    </RelativeLayout>
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="@dimen/margin_md"
-        android:padding="@dimen/margin_md"
-        android:weightSum="1"
-        android:layout_height="match_parent">
-        <RelativeLayout
+        android:layout_below="@id/imv_rl"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin1"
+        android:layout_margin="@dimen/margin_lg"
+        app:cardBackgroundColor="@color/white1"
+        android:elevation="@dimen/margin"
+        app:cardCornerRadius="@dimen/margin_xlg"
+        android:backgroundTint="@color/white1">
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom">
+            android:layout_height="match_parent"
 
-            <RelativeLayout
-                android:id="@+id/imv_rl"
-                android:layout_width="@dimen/size7"
-                android:layout_height="@dimen/size7"
-                android:layout_centerHorizontal="true">
+            android:backgroundTint="@color/app_color">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/circle_shape"
-                    android:backgroundTint="@color/lgry"
-                    android:padding="@dimen/margin_lg"
-                    android:src="@drawable/veh_icon"
-                    android:tint="@color/dgry" />
-
-                <ImageView
-                    android:id="@+id/imv"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop" />
-                <ImageView
-                    android:layout_width="@dimen/size4"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/cam_icon"
-                    android:tint="@color/white"
-                    android:background="@drawable/circle_shape"
-                    android:backgroundTint="@color/app_color"
-                    android:padding="@dimen/margin"
-                    android:layout_height="@dimen/size4"/>
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/txt2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/imv_rl"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/margin_lg"
-                android:fontFamily="@font/font1"
-                android:includeFontPadding="false"
-                android:text="@string/update_dt_here"
-                android:textColor="@color/dgry1"
-                android:textSize="@dimen/txt_size_lg" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/margin"
-            android:paddingTop="@dimen/margin_lg"
-            android:paddingRight="@dimen/margin">
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_below="@id/txt2"
-                android:layout_marginTop="@dimen/margin_xxlg"
-                android:paddingLeft="@dimen/margin1"
-                android:paddingRight="@dimen/margin"
-                android:background="@drawable/round_ract0"
-                android:layout_height="@dimen/size62">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_md"
+                android:weightSum="2">
 
-                <EditText
-                    android:id="@+id/et1"
-                    android:singleLine="true"
-                    android:background="@null"
-                    android:fontFamily="@font/font1"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/txt_size_lg"
+
+
+                <TextView
+                    android:id="@+id/txt2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_lg"
+                    android:layout_marginRight="@dimen/margin_xlg"
+                    android:fontFamily="@font/font2"
+                    android:layout_marginLeft="@dimen/margin"
                     android:includeFontPadding="false"
-                    android:textColor="@color/black"
-                    android:layout_marginLeft="@dimen/sizesm1"
-                    android:inputType="text"
-                    android:layout_centerVertical="true"
-                    android:hint="@string/veh_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_below="@id/txt2"
-                android:layout_marginTop="@dimen/margin1"
-                android:paddingLeft="@dimen/margin1"
-                android:paddingRight="@dimen/margin"
-                android:background="@drawable/round_ract0"
-                android:layout_height="@dimen/size62">
+                    android:lineSpacingExtra="@dimen/sizesm1"
+                    android:text="@string/veh_number"
+                    android:textColor="@color/dgry"
+                    android:textSize="@dimen/txt_size_lg" />
 
-                <EditText
-                    android:id="@+id/et2"
-                    android:singleLine="true"
-                    android:background="@null"
-                    android:fontFamily="@font/font1"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/txt_size_lg"
-                    android:includeFontPadding="false"
-                    android:textColor="@color/black"
-                    android:layout_marginLeft="@dimen/sizesm1"
-                    android:inputType="text"
-                    android:layout_centerVertical="true"
-                    android:hint="@string/licence_no"
+                <RelativeLayout
+                    android:id="@+id/bgh"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_below="@id/txt2"
-                android:layout_marginTop="@dimen/margin1"
-                android:paddingLeft="@dimen/margin1"
-                android:paddingRight="@dimen/margin"
-                android:background="@drawable/round_ract0"
-                android:layout_height="@dimen/size62">
+                    android:layout_height="@dimen/size6"
+                    android:layout_below="@id/txt2"
+                    android:layout_marginTop="@dimen/margin"
+                    android:background="@drawable/round_ract0"
+                    android:paddingLeft="@dimen/margin1"
+                    android:paddingRight="@dimen/margin">
 
-                <EditText
-                    android:id="@+id/et3"
-                    android:singleLine="true"
-                    android:background="@null"
-                    android:fontFamily="@font/font1"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/txt_size_lg"
+                    <EditText
+                        android:id="@+id/et1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/sizesm1"
+                        android:background="@null"
+                        android:fontFamily="@font/font1"
+                        android:hint="@string/veh_number"
+                        android:includeFontPadding="false"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/txt_size_md1"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bgh"
+                    android:layout_marginTop="@dimen/margin_xlg"
+                    android:layout_marginRight="@dimen/margin_xlg"
+                    android:fontFamily="@font/font2"
+                    android:layout_marginLeft="@dimen/margin"
                     android:includeFontPadding="false"
-                    android:textColor="@color/black"
-                    android:layout_marginLeft="@dimen/sizesm1"
-                    android:inputType="text"
-                    android:layout_centerVertical="true"
-                    android:hint="@string/car_category"
+                    android:lineSpacingExtra="@dimen/sizesm1"
+                    android:text="@string/licence_no"
+                    android:textColor="@color/dgry"
+                    android:textSize="@dimen/txt_size_lg" />
+
+                <RelativeLayout
+                    android:id="@+id/bgh2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-            <Button
-                android:id="@+id/bt1"
-                android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/margin_xlg"
-                android:background="@drawable/bt_bg"
-                android:fontFamily="@font/font2"
-                android:textColor="@color/white"
-                android:includeFontPadding="false"
-                android:textAllCaps="false"
-                android:onClick="LoginNow"
-                android:textSize="@dimen/txt_size_lg"
-                android:text="@string/signup"
-                android:backgroundTint="@color/app_color"
-                android:layout_height="@dimen/size62"/>
-        </LinearLayout>
-    </LinearLayout>
+                    android:layout_height="@dimen/size6"
+                    android:layout_below="@id/txt21"
+                    android:layout_marginTop="@dimen/margin"
+                    android:background="@drawable/round_ract0"
+                    android:paddingLeft="@dimen/margin1"
+                    android:paddingRight="@dimen/margin">
+
+                    <EditText
+                        android:id="@+id/et2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/sizesm1"
+                        android:background="@null"
+                        android:fontFamily="@font/font1"
+                        android:hint="@string/licence_no"
+                        android:includeFontPadding="false"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/txt_size_md1"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/txt21"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bgh"
+                    android:layout_marginTop="@dimen/margin_xlg"
+                    android:layout_marginRight="@dimen/margin_xlg"
+                    android:fontFamily="@font/font2"
+                    android:layout_marginLeft="@dimen/margin"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="@dimen/sizesm1"
+                    android:text="@string/car_category"
+                    android:textColor="@color/dgry"
+                    android:textSize="@dimen/txt_size_lg" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size6"
+                    android:layout_below="@id/txt21"
+                    android:layout_marginTop="@dimen/margin"
+                    android:background="@drawable/round_ract0"
+                    android:paddingLeft="@dimen/margin1"
+                    android:paddingRight="@dimen/margin">
+
+                    <EditText
+                        android:id="@+id/et3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/sizesm1"
+                        android:background="@null"
+                        android:fontFamily="@font/font1"
+                        android:hint="@string/car_category"
+                        android:includeFontPadding="false"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/txt_size_md1"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/bt1"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size6"
+                    android:layout_below="@id/bgh2"
+                    android:layout_marginTop="@dimen/margin_xxlg"
+                    android:layout_marginBottom="@dimen/sizesm1"
+                    android:background="@drawable/bt_bg"
+                    android:fontFamily="@font/font2"
+
+                    android:includeFontPadding="false"
+                    android:onClick="LoginNow"
+                    android:text="@string/submit"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/txt_size_lg" />
+
+
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>

@@ -1,165 +1,259 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@color/white"
-    android:paddingLeft="@dimen/margin1"
-    android:id="@+id/rl_main"
-    android:paddingRight="@dimen/margin1"
-    android:paddingBottom="@dimen/margin1"
-    android:paddingTop="@dimen/margin"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/rl_main"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white1"
+    android:orientation="vertical"
+    >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
+        android:weightSum="1"
+
         android:layout_height="match_parent">
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:src="@drawable/back_icon"
-            android:tint="@color/white"
-            android:scaleX=".8"
-            android:scaleY=".8"
-            android:onClick="NavNow"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/txt1"
-            android:layout_width="wrap_content"
-            android:text="@string/profile"
-            android:textColor="@color/black"
-            android:fontFamily="@font/font2"
-            android:textSize="@dimen/txt_size_xlg"
-            android:layout_marginTop="@dimen/margin_lg"
-            android:includeFontPadding="false"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/txt2"
-            android:layout_width="wrap_content"
-            android:text="@string/punch_line"
-            android:layout_below="@id/txt1"
-            android:fontFamily="@font/font1"
-            android:layout_marginTop="@dimen/margin1"
-            android:textColor="@color/dgry"
-            android:lineSpacingExtra="@dimen/sizesm1"
-            android:textSize="@dimen/txt_size_lg"
-            android:layout_marginRight="@dimen/margin_xlg"
-            android:includeFontPadding="false"
-            android:layout_height="wrap_content"/>
-
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_below="@id/txt2"
-            android:layout_marginTop="@dimen/margin_xxlg"
-            android:paddingLeft="@dimen/margin1"
-            android:paddingRight="@dimen/margin"
-            android:background="@drawable/round_ract0"
-            android:layout_height="@dimen/size62">
-
-            <EditText
-                android:id="@+id/et1"
-                android:singleLine="true"
-                android:background="@null"
-                android:fontFamily="@font/font1"
-                android:textStyle="bold"
-                android:textSize="@dimen/txt_size_lg"
-                android:includeFontPadding="false"
-                android:textColor="@color/black"
-                android:layout_marginLeft="@dimen/sizesm1"
-                android:inputType="text"
-                android:layout_centerVertical="true"
-                android:hint="@string/fname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_below="@id/txt2"
-            android:layout_marginTop="@dimen/margin1"
-            android:paddingLeft="@dimen/margin1"
-            android:paddingRight="@dimen/margin"
-            android:background="@drawable/round_ract0"
-            android:layout_height="@dimen/size62">
-
-            <EditText
-                android:id="@+id/et2"
-                android:singleLine="true"
-                android:background="@null"
-                android:fontFamily="@font/font1"
-                android:textStyle="bold"
-                android:textSize="@dimen/txt_size_lg"
-                android:includeFontPadding="false"
-                android:textColor="@color/black"
-                android:layout_marginLeft="@dimen/sizesm1"
-                android:inputType="text"
-                android:layout_centerVertical="true"
-                android:hint="@string/lname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_below="@id/txt2"
-            android:layout_marginTop="@dimen/margin1"
-            android:paddingLeft="@dimen/margin1"
-            android:paddingRight="@dimen/margin"
-            android:background="@drawable/round_ract0"
-            android:layout_height="@dimen/size62">
-
-            <EditText
-                android:id="@+id/et3"
-                android:singleLine="true"
-                android:background="@null"
-                android:fontFamily="@font/font1"
-                android:textStyle="bold"
-                android:textSize="@dimen/txt_size_lg"
-                android:includeFontPadding="false"
-                android:textColor="@color/black"
-                android:layout_marginLeft="@dimen/sizesm1"
-                android:inputType="textEmailAddress"
-                android:layout_centerVertical="true"
-                android:hint="@string/email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_below="@id/txt2"
-            android:layout_marginTop="@dimen/margin1"
-            android:paddingLeft="@dimen/margin1"
-            android:paddingRight="@dimen/margin"
-            android:background="@drawable/round_ract0"
-            android:layout_height="@dimen/size62">
-
-            <EditText
-                android:id="@+id/et4"
-                android:singleLine="true"
-                android:background="@null"
-                android:fontFamily="@font/font1"
-                android:textStyle="bold"
-                android:textSize="@dimen/txt_size_lg"
-                android:includeFontPadding="false"
-                android:textColor="@color/black"
-                android:layout_marginLeft="@dimen/sizesm1"
-                android:inputType="textEmailAddress"
-                android:layout_centerVertical="true"
-                android:hint="@string/mobile_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </RelativeLayout>
-        <Button
-            android:id="@+id/bt1"
-            android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/margin_lg"
-            android:background="@drawable/bt_bg"
-            android:fontFamily="@font/font2"
-            android:textColor="@color/white"
-            android:includeFontPadding="false"
-            android:textAllCaps="false"
-            android:onClick="LoginNow"
-            android:textSize="@dimen/txt_size_lg"
-            android:text="@string/update"
+            android:layout_height="0dp"
             android:backgroundTint="@color/app_color"
-            android:layout_height="@dimen/size62"/>
-
+            android:background="@drawable/bg_vec"
+            android:layout_weight=".40"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".60"/>
 
     </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+    <ImageView
+        android:layout_width="@dimen/size4"
+        android:src="@drawable/back_icon"
+        android:tint="@color/white"
+        android:scaleX=".8"
+        android:scaleY=".8"
+        android:layout_margin="@dimen/margin1"
+        android:onClick="NavNow"
+        android:layout_height="@dimen/size4"/>
+    <TextView
+        android:id="@+id/txt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font2"
+        android:includeFontPadding="false"
+        android:text="@string/profile"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/size62"
+        android:textColor="@color/white1"
+        android:textSize="@dimen/txt_size_xlg" />
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_below="@id/txt1"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_lg"
+        android:layout_margin="@dimen/margin_lg"
+        app:cardBackgroundColor="@color/white1"
+        android:elevation="@dimen/margin"
+        app:cardCornerRadius="@dimen/margin_xlg"
+        android:backgroundTint="@color/white1">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:backgroundTint="@color/app_color">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_md"
+                android:weightSum="2">
+
+
+
+                <TextView
+                    android:id="@+id/txt2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_lg"
+                    android:layout_marginRight="@dimen/margin_xlg"
+                    android:fontFamily="@font/font2"
+                    android:layout_marginLeft="@dimen/margin"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="@dimen/sizesm1"
+                    android:text="@string/fname"
+                    android:textColor="@color/dgry"
+                    android:textSize="@dimen/txt_size_lg" />
+
+                <RelativeLayout
+                    android:id="@+id/bgh"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size6"
+                    android:layout_below="@id/txt2"
+                    android:layout_marginTop="@dimen/margin"
+                    android:background="@drawable/round_ract0"
+                    android:paddingLeft="@dimen/margin1"
+                    android:paddingRight="@dimen/margin">
+
+                    <EditText
+                        android:id="@+id/et1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/sizesm1"
+                        android:background="@null"
+                        android:fontFamily="@font/font1"
+                        android:hint="@string/fname"
+                        android:includeFontPadding="false"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/txt_size_md1"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bgh"
+                    android:layout_marginTop="@dimen/margin_xlg"
+                    android:layout_marginRight="@dimen/margin_xlg"
+                    android:fontFamily="@font/font2"
+                    android:layout_marginLeft="@dimen/margin"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="@dimen/sizesm1"
+                    android:text="@string/lname"
+                    android:textColor="@color/dgry"
+                    android:textSize="@dimen/txt_size_lg" />
+
+                <RelativeLayout
+                    android:id="@+id/bgh2"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size6"
+                    android:layout_below="@id/txt21"
+                    android:layout_marginTop="@dimen/margin"
+                    android:background="@drawable/round_ract0"
+                    android:paddingLeft="@dimen/margin1"
+                    android:paddingRight="@dimen/margin">
+
+                    <EditText
+                        android:id="@+id/et2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/sizesm1"
+                        android:background="@null"
+                        android:fontFamily="@font/font1"
+                        android:hint="@string/lname"
+                        android:includeFontPadding="false"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/txt_size_md1"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/txt21"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bgh"
+                    android:layout_marginTop="@dimen/margin_xlg"
+                    android:layout_marginRight="@dimen/margin_xlg"
+                    android:fontFamily="@font/font2"
+                    android:layout_marginLeft="@dimen/margin"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="@dimen/sizesm1"
+                    android:text="@string/email"
+                    android:textColor="@color/dgry"
+                    android:textSize="@dimen/txt_size_lg" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size6"
+                    android:layout_below="@id/txt21"
+                    android:layout_marginTop="@dimen/margin"
+                    android:background="@drawable/round_ract0"
+                    android:paddingLeft="@dimen/margin1"
+                    android:paddingRight="@dimen/margin">
+
+                    <EditText
+                        android:id="@+id/et3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/sizesm1"
+                        android:background="@null"
+                        android:fontFamily="@font/font1"
+                        android:hint="@string/email"
+                        android:includeFontPadding="false"
+                        android:inputType="textEmailAddress"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/txt_size_md1"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bgh"
+                    android:layout_marginTop="@dimen/margin_xlg"
+                    android:layout_marginRight="@dimen/margin_xlg"
+                    android:fontFamily="@font/font2"
+                    android:layout_marginLeft="@dimen/margin"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="@dimen/sizesm1"
+                    android:text="@string/mobile_number"
+                    android:textColor="@color/dgry"
+                    android:textSize="@dimen/txt_size_lg" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size6"
+                    android:layout_marginTop="@dimen/margin"
+                    android:background="@drawable/round_ract0"
+                    android:paddingLeft="@dimen/margin1"
+                    android:paddingRight="@dimen/margin">
+
+                    <EditText
+                        android:id="@+id/et4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/sizesm1"
+                        android:background="@null"
+                        android:fontFamily="@font/font1"
+                        android:hint="@string/mobile_number"
+                        android:includeFontPadding="false"
+                        android:inputType="phone"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/txt_size_md1"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+                <Button
+                    android:id="@+id/bt1"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size6"
+                    android:layout_below="@id/bgh2"
+                    android:layout_marginTop="@dimen/margin_xxlg"
+                    android:layout_marginBottom="@dimen/sizesm1"
+                    android:background="@drawable/bt_bg"
+                    android:fontFamily="@font/font2"
+
+                    android:includeFontPadding="false"
+                    android:onClick="LoginNow"
+                    android:text="@string/submit"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/txt_size_lg" />
+
+
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

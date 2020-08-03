@@ -36,7 +36,7 @@ public class RidesAdp extends RecyclerView.Adapter<RidesAdp.MyViewHolder> {
 
         public RelativeLayout accept_bt;
         public TextView txt1,txt2,txt3;
-        public LinearLayout rl1;
+        public RelativeLayout rl1;
 
 
         public MyViewHolder(View view) {

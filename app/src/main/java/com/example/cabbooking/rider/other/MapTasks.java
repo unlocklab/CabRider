@@ -9,6 +9,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 
 import com.example.cabbooking.rider.R;
 import com.google.android.gms.maps.CameraUpdate;
@@ -75,9 +76,14 @@ public class MapTasks {
     public static BitmapDescriptor loadMarkImg(Activity activity, int loc_icon) {
         try{
             int height = 100;
-            int width = 70;
-            if(loc_icon==R.drawable.car_icon){
-                width = 110;
+            int width = 100;
+            if(loc_icon==R.drawable.car_icon) {
+                width = 70;
+            }
+            else if(loc_icon==R.drawable.loc_icon1
+                    || loc_icon==R.drawable.loc_icon2) {
+                height = 70;
+                width = 50;
             }
             BitmapDrawable bitmapdraw = (BitmapDrawable)activity.getResources().getDrawable(loc_icon);
             Bitmap b = bitmapdraw.getBitmap();
@@ -159,7 +165,7 @@ public class MapTasks {
                     .width(5)
                     .color(activity.getResources().getColor(R.color.app_color)));
 
-            zoomCamera(mMap,poly);
+            zoomCamera(activity,mMap,poly);
 
         }
         catch (Exception e){
@@ -167,27 +173,43 @@ public class MapTasks {
         }
         return my_line;
     }
-
-    public static void zoomCamera(GoogleMap mMap,List<LatLng> l1){
+    public static void zoomCamera(GoogleMap mMap, Location location){
         try{
-            int padding = 50;
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            if(location!=null) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15.0f));
 
-            for(LatLng latLng:l1) {
-                builder.include(latLng);
             }
-
-            LatLngBounds bounds = builder.build();
-
-            final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
-            mMap.moveCamera(cu);
-            mMap.animateCamera(cu);
         }
         catch (Exception e){
             e.printStackTrace();
         }
     }
+    public static void zoomCamera(Activity activity,GoogleMap mMap,List<LatLng> l1){
+        try{
+            System.out.println("zoom--------------");
+
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+            for (LatLng point : l1) {
+                builder.include(point);
+            }
+
+            LatLngBounds bounds = builder.build();
+
+            int width = activity.getResources().getDisplayMetrics().widthPixels;
+            int height = activity.getResources().getDisplayMetrics().heightPixels;
+            int padding = (int) (width * 0.10);
+
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+
+            mMap.moveCamera(cu);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
 
     public static String getAddress(Activity activity, double lat, double lng){
         String fullAdd=null;
@@ -237,5 +259,20 @@ public class MapTasks {
         }
 
         return poly;
+    }
+
+    public static Location getLocBYLatLng(String lat_lng) {
+        Location location = new Location("");
+        try{
+            String loc[] = lat_lng.split(",");
+
+            location.setLatitude(Double.parseDouble(loc[0]));
+            location.setLongitude(Double.parseDouble(loc[1]));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return location;
     }
 }

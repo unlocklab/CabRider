@@ -1,31 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="@color/white1"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1"
+
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:backgroundTint="@color/app_color"
+            android:background="@drawable/bg_vec"
+            android:layout_weight=".40"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".60"/>
+
+    </LinearLayout>
+    <ImageView
+        android:layout_width="@dimen/size4"
         android:src="@drawable/back_icon"
         android:tint="@color/white"
         android:scaleX=".8"
-        android:layout_marginLeft="@dimen/margin"
-        android:layout_marginTop="@dimen/margin"
         android:scaleY=".8"
+        android:layout_margin="@dimen/margin1"
         android:onClick="NavNow"
-        android:layout_height="wrap_content"/>
+        android:layout_height="@dimen/size4"/>
+    <TextView
+        android:id="@+id/txt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font2"
+        android:includeFontPadding="false"
+        android:text="@string/settings"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/size62"
+        android:textColor="@color/white1"
+        android:textSize="@dimen/txt_size_xlg" />
 
-    <RelativeLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:paddingLeft="@dimen/margin"
-        android:paddingRight="@dimen/margin"
-        android:layout_below="@id/fab1"
+        android:elevation="2dp"
+        android:outlineAmbientShadowColor="@color/app_color"
+        app:cardCornerRadius="@dimen/margin_lg"
+        app:cardBackgroundColor="@color/white"
+        android:layout_below="@id/txt1"
+        android:layout_margin="@dimen/margin1"
         android:layout_height="match_parent">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/lv1"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    </RelativeLayout>
+            android:paddingTop="@dimen/margin1"
+            android:paddingBottom="@dimen/margin1"
+            android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/lv1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>

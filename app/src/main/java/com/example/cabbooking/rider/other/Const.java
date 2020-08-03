@@ -1,6 +1,7 @@
 package com.example.cabbooking.rider.other;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
 import androidx.core.view.ViewCompat;
 
 import com.example.cabbooking.rider.R;
@@ -23,6 +25,7 @@ import com.example.cabbooking.rider.dto.PriceDto;
 import com.example.cabbooking.rider.dto.UserDto;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.json.JSONObject;
 
@@ -34,7 +37,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
+import java.util.TimeZone;
 
 public class Const {
     public static String data = "data";
@@ -45,7 +50,7 @@ public class Const {
     public static String rider = "rider";
     public static String cat_tbl = "CategoryTbl";
     public static String driver = "driver";
-    public static String radius = "1000";
+    public static String radius = "50";
     public static String google_api_key = "AIzaSyCEvSiOVPnuFInWhvOAnoIhqeoF0MRo3K8";
     public static String status = "status";
     public static String predictions = "predictions";
@@ -83,6 +88,7 @@ public class Const {
     public static String name = "name";
     public static String dial_code = "dial_code";
     public static String code = "code";
+    public static String join_tbl = "JoinTbl";
 
     public static long getUtcTime() {
         Date date = Calendar.getInstance().getTime();
@@ -102,12 +108,23 @@ public class Const {
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
     public static String getLocalTime(long milliSeconds) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis((int) milliSeconds);
-        return formatter.format(calendar.getTime());
-    }
+        TimeZone tz = TimeZone.getDefault();
+        calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+        java.util.Date currenTimeZone=new java.util.Date((long)milliSeconds);
 
+        return sdf.format(currenTimeZone);
+    }
+    public static boolean isMyServiceRunning(Context context,Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
     public static boolean isOnline(Activity activity) {
         ConnectivityManager cm =
                 (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -143,9 +160,9 @@ public class Const {
         return base64;
     }
 
-    public static List<UserDto> getNerestDriver(final Location my_location, List<UserDto> drivers1
+    public static UserDto getNerestDriver(final Location my_location, List<UserDto> drivers1
             , final boolean start, final boolean economy, final boolean comfort) {
-
+        System.out.println("search_driver--------------"+drivers1.size());
         try {
 
 
@@ -183,30 +200,31 @@ public class Const {
         catch (Exception e){
             e.printStackTrace();
         }
-
-        return  drivers1;
+        System.out.println("drivers---------------"+drivers1.size());
+        if(drivers1.size()>0){
+            return  drivers1.get(0);
+        }
+        else {
+            return null;
+        }
     }
 
     private static AvailDto calAvailUser(Location my_location, UserDto userDto, boolean start, boolean economy, boolean comfort) {
         double distance = 0;
         boolean found = false;
         try {
-            JSONObject jk = new JSONObject(userDto.getLocation());
-            Location location = new Location("");
 
-            location.setLatitude(jk.getDouble("mLatitude"));
-            location.setLongitude(jk.getDouble("mLongitude"));
-            location.setAltitude(jk.getDouble("mAltitude"));
+            Location  location = Const.getLocation(userDto.getLocation());
 
             distance = my_location.distanceTo(location);
 
 
-            if (checkCom(start,userDto.isStart())
-                    && checkCom(economy,userDto.isEconomy())
-                    && checkCom(comfort,userDto.isComfort())) {
+//            if (checkCom(start,userDto.isStart())
+//                    && checkCom(economy,userDto.isEconomy())
+//                    && checkCom(comfort,userDto.isComfort())) {
 
                 found = true;
-            }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -235,30 +253,51 @@ public class Const {
         return i1;
     }
 
-    public static void setChkHandler(final Activity activity, final TextView chk) {
+    public static void setChkHandler(final Activity activity
+            , final CardView card1
+            , final CardView card2
+            , final CardView card3) {
         try{
-           chk.setOnClickListener(new View.OnClickListener() {
+            card1.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View v) {
-                   if(chk.getTag().toString().equals("0")){
-                       chk.setTag("1");
-                       chk.setTextColor(activity.getResources().getColor(R.color.white));
-                       ViewCompat.setBackgroundTintList(chk, ColorStateList.valueOf(activity.getResources().getColor(R.color.app_color)));
-                   }
-                   else{
-                       chk.setTag("0");
-                       chk.setTextColor(activity.getResources().getColor(R.color.dgry1));
-                       ViewCompat.setBackgroundTintList(chk, null);
-                   }
+                   card1.setAlpha(1f);
+                   card1.setTag("1");
+                   card2.setAlpha(.5f);
+                   card2.setTag("0");
+                   card3.setAlpha(.5f);
+                   card3.setTag("0");
                }
            });
+            card2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    card1.setAlpha(.5f);
+                    card1.setTag("0");
+                    card2.setAlpha(1f);
+                    card2.setTag("1");
+                    card3.setAlpha(.5f);
+                    card3.setTag("0");
+                }
+            });
+            card3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    card1.setAlpha(.5f);
+                    card1.setTag("0");
+                    card2.setAlpha(.5f);
+                    card2.setTag("0");
+                    card3.setAlpha(1f);
+                    card3.setTag("1");
+                }
+            });
         }
         catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public static boolean getChecked(TextView chk1) {
+    public static boolean getChecked(CardView chk1) {
         try{
             if(chk1.getTag().toString().equals("1")){
                 return true;
@@ -270,21 +309,52 @@ public class Const {
         return false;
     }
 
-    public static void setChecked(Activity activity, TextView chk,boolean status) {
+    public static void setChecked(Activity activity, BottomSheetDialog dialog, boolean start, boolean economy, boolean comfort) {
         try{
-            if(status){
-                chk.setTag("1");
-                chk.setTextColor(activity.getResources().getColor(R.color.white));
-                ViewCompat.setBackgroundTintList(chk, ColorStateList.valueOf(activity.getResources().getColor(R.color.app_color)));
+            CardView card1 = dialog.findViewById(R.id.card1);
+            CardView card2 = dialog.findViewById(R.id.card2);
+            CardView card3 = dialog.findViewById(R.id.card3);
+
+            if(start){
+                card1.setAlpha(1f);
+                card2.setAlpha(.5f);
+                card3.setAlpha(.5f);
+            }
+            else if(economy){
+                card1.setAlpha(.5f);
+                card2.setAlpha(1f);
+                card3.setAlpha(.5f);
+            }
+            else if(comfort){
+                card1.setAlpha(.5f);
+                card2.setAlpha(.5f);
+                card3.setAlpha(1f);
             }
             else{
-                chk.setTag("0");
-                chk.setTextColor(activity.getResources().getColor(R.color.dgry1));
-                ViewCompat.setBackgroundTintList(chk, null);
+                card1.setAlpha(1f);
+                card2.setAlpha(.5f);
+                card3.setAlpha(.5f);
             }
         }
         catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public static Location getLocation(String str) {
+        try {
+            if (str.length() > 0) {
+                String str1[] = str.split(",");
+                Location location = new Location("");
+                location.setLatitude(Double.parseDouble(str1[0]));
+                location.setLongitude(Double.parseDouble(str1[1]));
+
+                return location;
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

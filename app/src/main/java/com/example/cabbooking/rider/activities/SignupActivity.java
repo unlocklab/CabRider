@@ -96,12 +96,6 @@ public class SignupActivity extends AppCompatActivity {
         et5 = findViewById(R.id.et5);
         cc_digit = findViewById(R.id.cc_digit);
 
-        findViewById(R.id.cc_rl).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cc_digit.performClick();
-            }
-        });
 
         findViewById(R.id.down_icon).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +107,7 @@ public class SignupActivity extends AppCompatActivity {
         cc_digit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CountryPop();
+//                CountryPop();
             }
         });
     }
@@ -260,6 +254,7 @@ public class SignupActivity extends AppCompatActivity {
                 userDto.setPassword(et5.getText().toString());
                 userDto.setDatetime(Const.getUtcTime());
                 userDto.setUser_type(Const.rider);
+                userDto.setBalance("0");
 
 
                 checkKeyValue(UserConst.email,userDto.getEmail(),userDto);

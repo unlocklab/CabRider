@@ -1,6 +1,7 @@
 package com.example.cabbooking.rider.services;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -20,21 +22,42 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.example.cabbooking.rider.dto.UserConst;
 import com.example.cabbooking.rider.dto.UserDto;
+import com.example.cabbooking.rider.intr.AdpListner;
 import com.example.cabbooking.rider.other.Const;
+import com.example.cabbooking.rider.other.MySharedPref;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
 public class GPSTracker extends Service implements LocationListener {
 
-    private final Context mContext;
+    private Context mContext;
+    private AdpListner adpListner;
     private UserDto userDto = null;
-
+    private final IBinder myBinder = new MyLocalBinder();
     // flag for GPS status
     boolean isGPSEnabled = false;
 
     // flag for network status
     boolean isNetworkEnabled = false;
+    private Activity activity;
+
+    public GPSTracker() {
+
+    }
+    public void setData(Activity activity) {
+        this.activity = activity;
+        mContext = activity;
+    }
+    public Context getmContext() {
+        return mContext;
+    }
+
+    public class MyLocalBinder extends Binder {
+        public GPSTracker getService() {
+            return GPSTracker.this;
+        }
+    }
 
     // flag for GPS status
     boolean canGetLocation = false;
@@ -53,15 +76,17 @@ public class GPSTracker extends Service implements LocationListener {
     protected LocationManager locationManager;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public GPSTracker(Context context, UserDto userDto) {
+    public GPSTracker(Activity context, UserDto userDto) {
         this.mContext = context;
+        this.activity = context;
         this.userDto = userDto;
-        getLocation();
+        getLocation(activity);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public Location getLocation() {
+    public Location getLocation(Activity activity) {
         try {
+            adpListner = (AdpListner) activity;
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 
             // getting GPS status
@@ -95,7 +120,18 @@ public class GPSTracker extends Service implements LocationListener {
                         if (location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
+                            try{
+                                userDto = new Gson().fromJson(new MySharedPref().getData(getApplicationContext(), Const.ldata, "")
+                                        , UserDto.class);
+                                userDto.setLocation(location.getLatitude() + "," + location.getLongitude());
+                                new MySharedPref().saveData(getApplicationContext(),Const.ldata, new Gson().toJson(userDto)+"");
+                                DatabaseReference mDatabaseUser = FirebaseDatabase.getInstance().getReference(Const.user_tbl);
+                                mDatabaseUser.child(userDto.getUserId()).child(UserConst.location).setValue(location.getLatitude() + "," + location.getLongitude());
 
+                            }
+                            catch (Exception e){
+                                e.printStackTrace();
+                            }
 
                         }
                     }
@@ -117,6 +153,19 @@ public class GPSTracker extends Service implements LocationListener {
                             if (location != null) {
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
+                                try{
+                                    userDto = new Gson().fromJson(new MySharedPref().getData(getApplicationContext(), Const.ldata, "")
+                                            , UserDto.class);
+                                    userDto.setLocation(location.getLatitude() + "," + location.getLongitude());
+                                    new MySharedPref().saveData(getApplicationContext(),Const.ldata, new Gson().toJson(userDto)+"");
+                                    DatabaseReference mDatabaseUser = FirebaseDatabase.getInstance().getReference(Const.user_tbl);
+                                    mDatabaseUser.child(userDto.getUserId()).child(UserConst.location).setValue(location.getLatitude() + "," + location.getLongitude());
+
+                                }
+                                catch (Exception e){
+                                    e.printStackTrace();
+                                }
+
                             }
                         }
                     }
@@ -212,9 +261,18 @@ public class GPSTracker extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
 //        Toast.makeText(mContext,""+location.getLongitude(),6).show();
-
-//        DatabaseReference mDatabaseUser = FirebaseDatabase.getInstance().getReference(Const.user_tbl);
-//        mDatabaseUser.child(userDto.getUserId()).child(UserConst.location).setValue(new Gson().toJson(location)+"");
+        try {
+            userDto = new Gson().fromJson(new MySharedPref().getData(getApplicationContext(), Const.ldata, "")
+                    , UserDto.class);
+            userDto.setLocation(location.getLatitude() + "," + location.getLongitude());
+            new MySharedPref().saveData(getApplicationContext(), Const.ldata, new Gson().toJson(userDto) + "");
+            DatabaseReference mDatabaseUser = FirebaseDatabase.getInstance().getReference(Const.user_tbl);
+            mDatabaseUser.child(userDto.getUserId()).child(UserConst.location).setValue(location.getLatitude() + "," + location.getLongitude());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        adpListner.click7(0);
     }
 
     @Override
@@ -234,6 +292,6 @@ public class GPSTracker extends Service implements LocationListener {
 
     @Override
     public IBinder onBind(Intent arg0) {
-        return null;
+        return myBinder;
     }
 }

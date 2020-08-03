@@ -66,37 +66,50 @@ public class BgProcess extends IntentService {
     }
 
     private void MyBgTask(String user_id, final String title, final String description, final String tripId) {
-        final UserDto ldata = new Gson().fromJson(new MySharedPref().getData(getApplicationContext(), Const.ldata, "")
-                , UserDto.class);
-        final DatabaseReference mDatabaseUser = FirebaseDatabase.getInstance().getReference(Const.user_tbl);
-        final boolean[] done = {true};
-        listener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mDatabaseUser.removeEventListener(listener);
-                System.out.println("testbk----------error--3---");
-                if(dataSnapshot.getValue()!=null && done[0]){
-                    done[0] = false;
-                    UserDto userDto = dataSnapshot.getValue(UserDto.class);
-                    JSONArray tokens = new JSONArray();
-                    tokens.put(userDto.getToken());
+        try {
+            final UserDto ldata = new Gson().fromJson(new MySharedPref().getData(getApplicationContext(), Const.ldata, "")
+                    , UserDto.class);
+            final DatabaseReference mDatabaseUser = FirebaseDatabase.getInstance().getReference(Const.user_tbl);
+            final boolean[] done = {true};
+            listener = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    try {
+                        mDatabaseUser.removeEventListener(listener);
+                        System.out.println("testbk----------error--3---");
+                        if (dataSnapshot.getValue() != null && done[0]) {
+                            done[0] = false;
+                            UserDto userDto = dataSnapshot.getValue(UserDto.class);
+                            JSONArray tokens = new JSONArray();
+                            tokens.put(userDto.getToken());
 
-                    sendBulkNoti(tokens
-                    ,title
-                    ,description
-                    ,tripId
-                    ,ldata);
+                            sendBulkNoti(tokens
+                                    , title
+                                    , description
+                                    , tripId
+                                    , ldata);
 
+                        }
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                mDatabaseUser.removeEventListener(listener);
-            }
-        };
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    try {
+                        mDatabaseUser.removeEventListener(listener);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            };
 
-        mDatabaseUser.child(user_id).addValueEventListener(listener);
+            mDatabaseUser.child(user_id).addValueEventListener(listener);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 

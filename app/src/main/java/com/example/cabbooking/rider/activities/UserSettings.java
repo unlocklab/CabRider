@@ -183,10 +183,10 @@ public class UserSettings extends AppCompatActivity implements AdpListner {
             startActivity(new Intent(getApplicationContext(),ChangePassword.class));
         }
         else if(l1.get(position).getValue().equals(getString(R.string.location))){
-//                        startActivity(new Intent(getApplicationContext(),ProfileActivity.class));
+            startActivity(new Intent(getApplicationContext(),LocationActivtiy.class));
         }
         else if(l1.get(position).getValue().equals(getString(R.string.wallet))){
-            startActivity(new Intent(getApplicationContext(),ProfileActivity.class));
+            startActivity(new Intent(getApplicationContext(),WalletActivity.class));
         }
         else if(l1.get(position).getValue().equals(getString(R.string.support_request))){
             startActivity(new Intent(getApplicationContext(),RequestSupport.class));

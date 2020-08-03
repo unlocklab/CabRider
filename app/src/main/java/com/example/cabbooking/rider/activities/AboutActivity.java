@@ -19,20 +19,20 @@ import com.example.cabbooking.rider.other.Const;
  */
 
 public class AboutActivity extends AppCompatActivity {
-
     /*
-    * init Ui in class
-    *
-    * */
+     * init Ui in class
+     *
+     * */
     private WebView wv1;
+    private TextView txt1;
     public void NavNow(View v){
         finish();
     }
     private String title = "";
 
     /*
-    * this method connects Ui xml file with java file
-    * */
+     * this method connects Ui xml file with java file
+     * */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,13 +42,13 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     /*
-    * loading content in Webview because text align justify doesnot works in android
-    * and this code is supportable for all devices 4.4 to max
-    * */
+     * loading content in Webview because text align justify doesnot works in android
+     * and this code is supportable for all devices 4.4 to max
+     * */
     private void initUI() {
-//        TextView title_txt= (TextView) findViewById(R.id.title_txt);
-//        title_txt.setText(title);
-        wv1 = (WebView) findViewById(R.id.wv1);
+        txt1=  findViewById(R.id.txt1);
+        txt1.setText(title);
+        wv1 =  findViewById(R.id.wv1);
 
 
         String str = "<html>" +

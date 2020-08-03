@@ -5,22 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="@dimen/margin_lg"
+    app:cardCornerRadius="@dimen/margin"
     card_view:cardElevation="@dimen/margin"
     card_view:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:paddingTop="@dimen/margin"
         android:layout_height="match_parent">
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/sizesm1"
+            app:cardBackgroundColor="@color/lgry"
+            app:cardCornerRadius="@dimen/margin"
+            card_view:cardElevation="@dimen/sizesm1"
+            card_view:cardUseCompatPadding="true">
+
             <RelativeLayout
-                android:id="@+id/card3"
+                android:id="@+id/rl1"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/size5"
-                android:layout_margin="@dimen/margin"
-                android:background="@drawable/round_ract4"
-                android:backgroundTint="@color/lgry"
+                android:layout_height="@dimen/size6"
                 android:padding="@dimen/margin">
 
                 <EditText
@@ -28,20 +34,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:layout_marginLeft="@dimen/margin"
                     android:layout_centerVertical="true"
                     android:background="@null"
                     android:hint="@string/search"
+                    android:fontFamily="@font/font1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/dgry"
-                    android:textSize="@dimen/txt_size_md" />
+                    android:textSize="@dimen/txt_size_md1" />
             </RelativeLayout>
+        </androidx.cardview.widget.CardView>
 
         <ListView
             android:id="@+id/gv1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/card3"
+            android:layout_below="@id/card1"
             android:layout_margin="@dimen/margin"
             android:divider="@color/dgry"
             android:dividerHeight="1dp" />

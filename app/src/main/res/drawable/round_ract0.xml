@@ -3,7 +3,7 @@
     <solid android:color="@color/white"/>
 
     <stroke android:width="2dp"
-        android:color="@color/app_color"
+        android:color="@color/gry"
         />
 
     <padding android:left="2dp"
@@ -12,7 +12,7 @@
         android:bottom="2dp"
         />
 
-    <corners android:bottomRightRadius="@dimen/margin"
-        android:bottomLeftRadius="@dimen/margin"
-        android:topLeftRadius="@dimen/margin" android:topRightRadius="@dimen/margin"/>
+    <corners android:bottomRightRadius="@dimen/margin_lg"
+        android:bottomLeftRadius="@dimen/margin_lg"
+        android:topLeftRadius="@dimen/margin_lg" android:topRightRadius="@dimen/margin_lg"/>
 </shape>

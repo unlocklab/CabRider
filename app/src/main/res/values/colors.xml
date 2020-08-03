@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#30c17c</color>
-    <color name="colorPrimaryDark">#2aa76b</color>
-    <color name="colorAccent">#30c17c</color>
+    <color name="colorPrimary">#36dd81</color>
+    <color name="colorPrimaryDark">#22a95f</color>
+    <color name="colorAccent">#36dd81</color>
 
 
-    <color name="app_color">#30c17c</color>
+    <color name="app_color">#36dd81</color>
+    <color name="app_color_light">#73f9af</color>
     <color name="white">#ffffff</color>
     <color name="white1">#ffffff</color>
     <color name="black">#000000</color>
@@ -21,5 +22,6 @@
     <color name="red">#e81616</color>
     <color name="green">#26df44</color>
     <color name="yellow">#d9e018</color>
+
 
 </resources>
